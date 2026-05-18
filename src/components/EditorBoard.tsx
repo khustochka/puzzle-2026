@@ -1,32 +1,22 @@
 import type { EditorBoardState, EditorCategory, EditorEntry } from "../types/editorTypes";
 import { useState } from 'react';
 import { CategoryForm } from "./CategoryForm";
+import { AddCategoryForm } from "./AddCategoryForm"
 
 export function EditorBoard({ initialState }: { initialState: EditorBoardState }) {
 
   const [state, setState] = useState(initialState);
 
-  const addCategory = (title: string) => {
-    setState({ ...state, categories: [...state.categories, buildCategory(title)] })
+  const totalCategories = state.categories.length;
+
+  const completeCategories = state.categories.reduce(
+    (count, cat) => count + (cat.entries.length >= 45 ? 1 : 0),
+    0
+  );
+
+  const handleAddCategory = (category: EditorCategory) => {
+    setState({ ...state, categories: [...state.categories, category] })
   }
-
-  const buildCategory = (title: string): EditorCategory => ({
-    id: crypto.randomUUID(),
-    title: title,
-    entries: []
-  })
-
-  const handleNewCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      const value = e.currentTarget.value.trim();
-      if (!value) return;
-      addCategory(value);
-      e.currentTarget.value = '';
-    }
-    if (e.key === 'Escape') {
-      e.currentTarget.value = '';
-    }
-  };
 
   const updateCategoryTitle = (catId: string, newTitle: string) => {
     const updated = state.categories.map(category =>
@@ -64,6 +54,13 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
   return (
     <div className="min-h-screen bg-slate-100 py-10 px-4">
       <div className="w-full">
+
+        <div>
+          <div>Total categories: <span>{totalCategories}</span></div>
+          <div>Complete: <span>{completeCategories}</span></div>
+          <AddCategoryForm onAddCategory={handleAddCategory} />
+        </div>
+
         <ol className="list-decimal pl-16 marker:text-3xl marker:font-bold marker:text-indigo-600 flex flex-col gap-6">
           {
             state.categories.map((category: EditorCategory) => (
@@ -79,18 +76,8 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
           }
         </ol>
 
-        <div className="mt-8 mx-auto w-1/2 flex items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-white/60 p-4">
-          <label htmlFor="newCategory" className="text-sm font-medium text-slate-600 whitespace-nowrap">
-            Add category:
-          </label>
-          <input
-            id="newCategory"
-            defaultValue=""
-            onKeyDown={handleNewCategoryKeyDown}
-            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          />
-        </div>
+
       </div>
-    </div>
+    </div >
   )
 }
