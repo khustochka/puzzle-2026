@@ -1,39 +1,63 @@
-import type { EditorCategory } from "../types/editorTypes";
-import { useState } from 'react';
+import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 
-export function CategoryForm({ initialCategory, onUpdateTitle, onDelete }: {
-  initialCategory: EditorCategory;
+export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord }: {
+  category: EditorCategory;
   onUpdateTitle: (id: string, newTitle: string) => void;
   onDelete: (id: string) => void;
+  onAddWord: (catId: string, word: EditorEntry) => void;
 }) {
 
-  const [category] = useState(initialCategory);
+  const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') e.currentTarget.blur();
+    if (e.key === 'Escape') {
+      e.currentTarget.value = category.title;
+      e.currentTarget.blur();
+    }
+  }
+
+  const handleNewWordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const value = e.currentTarget.value.trim();
+      if (!value) return;
+      onAddWord(category.id, buildEntry(value));
+      e.currentTarget.value = '';
+    }
+    if (e.key === 'Escape') {
+      e.currentTarget.value = '';
+    }
+  };
+
+  const buildEntry = (word: string): EditorEntry => ({
+    id: crypto.randomUUID(),
+    title: word
+  })
+
 
   return (
-    <li>
+    <li id={`category-${category.id}`}>
       <div>
-        <input id={`title-${category.id}`}
+        <input
           defaultValue={category.title}
           onBlur={(e) => onUpdateTitle(category.id, e.currentTarget.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') e.currentTarget.blur();
-            if (e.key === 'Escape') {
-              e.currentTarget.value = category.title;
-              e.currentTarget.blur();
-            }
-          }}
+          onKeyDown={(e) => handleTitleKeyDown(e)}
         />
         <span className="cursor-pointer" onClick={() => onDelete(category.id)}>X</span>
 
-        <ol className="list-decimal ml-6">
+        <ol>
           {
             category.entries.map((entry) => (
-              < li key={entry.id}>{entry.title}</li>
+              <li key={entry.id} className="inline-block">
+                <input defaultValue={entry.title} />
+              </li>
             ))
           }
         </ol>
+
+      <label htmlFor='newWord'>Add word:</label>
+      <input id='newWord' defaultValue=''
+        onKeyDown={handleNewWordKeyDown}
+      />
       </div>
     </li>
   )
-
 }

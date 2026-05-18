@@ -1,4 +1,4 @@
-import type { EditorBoardState, EditorCategory } from "../types/editorTypes";
+import type { EditorBoardState, EditorCategory, EditorEntry } from "../types/editorTypes";
 import { useState } from 'react';
 import { CategoryForm } from "./CategoryForm";
 
@@ -17,17 +17,29 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
   })
 
   const handleNewCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter') return;
-    const value = e.currentTarget.value.trim();
-    if (!value) return;
-    addCategory(value);
-    e.currentTarget.value = '';
+    if (e.key === 'Enter') {
+      const value = e.currentTarget.value.trim();
+      if (!value) return;
+      addCategory(value);
+      e.currentTarget.value = '';
+    }
+    if (e.key === 'Escape') {
+      e.currentTarget.value = '';
+    }
   };
 
   const updateCategoryTitle = (catId: string, newTitle: string) => {
     const updated = state.categories.map(category =>
       category.id === catId ? { ...category, title: newTitle } : category
     );
+    setState({ ...state, categories: updated })
+  }
+
+  const handleAddWord = (catId: string, word: EditorEntry) => {
+    const updated = state.categories.map(category =>
+      category.id === catId ? { ...category, entries: [...category.entries, word] } : category
+    );
+    console.log(updated);
     setState({ ...state, categories: updated })
   }
 
@@ -45,15 +57,16 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
           state.categories.map((category: EditorCategory) => (
             <CategoryForm
               key={category.id}
-              initialCategory={category}
+              category={category}
               onUpdateTitle={updateCategoryTitle}
               onDelete={deleteCategory}
+              onAddWord={handleAddWord}
             />
           ))
         }
       </ol>
 
-      <span>Add category:</span>
+      <label htmlFor='newCategory'>Add category:</label>
       <input id='newCategory' defaultValue=''
         onKeyDown={handleNewCategoryKeyDown}
       />
