@@ -23,7 +23,7 @@ export function AddCategoryForm({ onAddCategory }: {
   };
 
   return (
-    <div className="my-6 mx-auto w-1/2 flex items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-white/60 p-4">
+    <div className="flex items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-white/60 px-3 py-2">
       <label htmlFor="newCategory" className="text-sm font-medium text-slate-600 whitespace-nowrap">
         Add category:
       </label>
