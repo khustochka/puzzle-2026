@@ -62,26 +62,35 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
   }
 
   return (
-    <div>
-      <ol className='ml-8 list-decimal'>
-        {
-          state.categories.map((category: EditorCategory) => (
-            <CategoryForm
-              key={category.id}
-              category={category}
-              onUpdateTitle={updateCategoryTitle}
-              onDelete={deleteCategory}
-              onAddWord={handleAddWord}
-              onDeleteWord={handleDeleteWord}
-            />
-          ))
-        }
-      </ol>
+    <div className="min-h-screen bg-slate-100 py-10 px-4">
+      <div className="w-full">
+        <ol className="list-decimal pl-16 marker:text-3xl marker:font-bold marker:text-indigo-600 flex flex-col gap-6">
+          {
+            state.categories.map((category: EditorCategory) => (
+              <CategoryForm
+                key={category.id}
+                category={category}
+                onUpdateTitle={updateCategoryTitle}
+                onDelete={deleteCategory}
+                onAddWord={handleAddWord}
+                onDeleteWord={handleDeleteWord}
+              />
+            ))
+          }
+        </ol>
 
-      <label htmlFor='newCategory'>Add category:</label>
-      <input id='newCategory' defaultValue=''
-        onKeyDown={handleNewCategoryKeyDown}
-      />
+        <div className="mt-8 mx-auto w-1/2 flex items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-white/60 p-4">
+          <label htmlFor="newCategory" className="text-sm font-medium text-slate-600 whitespace-nowrap">
+            Add category:
+          </label>
+          <input
+            id="newCategory"
+            defaultValue=""
+            onKeyDown={handleNewCategoryKeyDown}
+            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+          />
+        </div>
+      </div>
     </div>
   )
 }
