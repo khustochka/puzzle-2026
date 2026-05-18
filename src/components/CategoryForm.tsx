@@ -1,10 +1,11 @@
 import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 
-export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord }: {
+export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onDeleteWord }: {
   category: EditorCategory;
   onUpdateTitle: (id: string, newTitle: string) => void;
   onDelete: (id: string) => void;
   onAddWord: (catId: string, word: EditorEntry) => void;
+  onDeleteWord: (catId: string, wordId: string) => void;
 }) {
 
   const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -48,15 +49,17 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord }: {
             category.entries.map((entry) => (
               <li key={entry.id} className="inline-block">
                 <input defaultValue={entry.title} />
+
+                <span className="cursor-pointer" onClick={() => onDeleteWord(category.id, entry.id)}>X</span>
               </li>
             ))
           }
         </ol>
 
-      <label htmlFor='newWord'>Add word:</label>
-      <input id='newWord' defaultValue=''
-        onKeyDown={handleNewWordKeyDown}
-      />
+        <label htmlFor='newWord'>Add word:</label>
+        <input id='newWord' defaultValue=''
+          onKeyDown={handleNewWordKeyDown}
+        />
       </div>
     </li>
   )

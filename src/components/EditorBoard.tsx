@@ -35,17 +35,28 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
     setState({ ...state, categories: updated })
   }
 
+  const deleteCategory = (catId: string) => {
+    const updated = state.categories.filter(category =>
+      category.id !== catId
+    );
+    setState({ ...state, categories: updated })
+  }
+
   const handleAddWord = (catId: string, word: EditorEntry) => {
     const updated = state.categories.map(category =>
       category.id === catId ? { ...category, entries: [...category.entries, word] } : category
     );
-    console.log(updated);
     setState({ ...state, categories: updated })
   }
 
-  const deleteCategory = (catId: string) => {
-    const updated = state.categories.filter(category =>
-      category.id !== catId
+  const handleDeleteWord = (catId: string, wordId: string) => {
+    const updated = state.categories.map(category =>
+      category.id === catId ?
+        {
+          ...category,
+          entries: category.entries.filter((word) => (word.id !== wordId))
+        } :
+        category
     );
     setState({ ...state, categories: updated })
   }
@@ -61,6 +72,7 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
               onUpdateTitle={updateCategoryTitle}
               onDelete={deleteCategory}
               onAddWord={handleAddWord}
+              onDeleteWord={handleDeleteWord}
             />
           ))
         }
