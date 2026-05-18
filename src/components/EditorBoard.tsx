@@ -25,8 +25,15 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
   };
 
   const updateCategoryTitle = (catId: string, newTitle: string) => {
-    const updated = state.categories.map(item =>
-      item.id === catId ? { ...item, title: newTitle } : item
+    const updated = state.categories.map(category =>
+      category.id === catId ? { ...category, title: newTitle } : category
+    );
+    setState({ ...state, categories: updated })
+  }
+
+  const deleteCategory = (catId: string) => {
+    const updated = state.categories.filter(category =>
+      category.id !== catId
     );
     setState({ ...state, categories: updated })
   }
@@ -40,6 +47,7 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
               key={category.id}
               initialCategory={category}
               onUpdateTitle={updateCategoryTitle}
+              onDelete={deleteCategory}
             />
           ))
         }

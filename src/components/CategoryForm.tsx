@@ -1,9 +1,10 @@
 import type { EditorCategory } from "../types/editorTypes";
 import { useState } from 'react';
 
-export function CategoryForm({ initialCategory, onUpdateTitle }: {
+export function CategoryForm({ initialCategory, onUpdateTitle, onDelete }: {
   initialCategory: EditorCategory;
   onUpdateTitle: (id: string, newTitle: string) => void;
+  onDelete: (id: string) => void;
 }) {
 
   const [category] = useState(initialCategory);
@@ -22,6 +23,15 @@ export function CategoryForm({ initialCategory, onUpdateTitle }: {
             }
           }}
         />
+        <span className="cursor-pointer" onClick={() => onDelete(category.id)}>X</span>
+
+        <ol className="list-decimal ml-6">
+          {
+            category.entries.map((entry) => (
+              < li key={entry.id}>{entry.title}</li>
+            ))
+          }
+        </ol>
       </div>
     </li>
   )
