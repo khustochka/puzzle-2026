@@ -1,12 +1,13 @@
 import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onDeleteWord }: {
+export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onDeleteWord, ref }: {
   category: EditorCategory;
   onUpdateTitle: (id: string, newTitle: string) => void;
   onDelete: (id: string) => void;
   onAddWord: (catId: string, word: EditorEntry) => void;
   onDeleteWord: (catId: string, wordId: string) => void;
+  ref: React.Ref<HTMLLIElement>
 }) {
 
   const totalEntries = category.entries.length;
@@ -63,7 +64,7 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
 
 
   return (
-    <li id={`category-${category.id}`} className="pl-2">
+    <li id={`category-${category.id}`} className="pl-2" ref={ref}>
       <div className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
         <button
           type="button"

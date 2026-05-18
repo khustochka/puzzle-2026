@@ -1,11 +1,19 @@
 import type { EditorCategory, EditorEntry } from "../types/editorTypes";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { CategoryForm } from "./CategoryForm";
 import { AddCategoryForm } from "./AddCategoryForm"
 
 export function EditorBoard({ initialState }: { initialState: EditorCategory[] }) {
 
   const [categories, setCategories] = useState(initialState);
+  const [newlyAddedCategoryId, setNewlyAddedCategoryId] = useState<string | null>(null);
+  const newlyAddedCategoryRef = useRef<HTMLLIElement | null>(null);
+
+  useEffect(() => {
+  if (newlyAddedCategoryId !== null) {
+    newlyAddedCategoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}, [newlyAddedCategoryId]);
 
   const totalCategories = categories.length;
 
@@ -16,6 +24,7 @@ export function EditorBoard({ initialState }: { initialState: EditorCategory[] }
 
   const handleAddCategory = (category: EditorCategory) => {
     setCategories([...categories, category])
+    setNewlyAddedCategoryId(category.id)
   }
 
   const updateCategoryTitle = (catId: string, newTitle: string) => {
@@ -82,6 +91,7 @@ export function EditorBoard({ initialState }: { initialState: EditorCategory[] }
           {
             categories.map((category: EditorCategory) => (
               <CategoryForm
+                ref={category.id === newlyAddedCategoryId ? newlyAddedCategoryRef : null}
                 key={category.id}
                 category={category}
                 onUpdateTitle={updateCategoryTitle}
