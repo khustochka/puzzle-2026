@@ -12,12 +12,28 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
   const totalEntries = category.entries.length;
 
   let status;
+  let countColor;
   if (totalEntries < 45) {
-    status = <span>In progress</span>;
+    countColor = "text-amber-800";
+    status = (
+      <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide text-amber-800 ring-1 ring-amber-200">
+        In progress
+      </span>
+    );
   } else if (totalEntries === 45) {
-    status = <span>Complete</span>;
+    countColor = "text-emerald-600";
+    status = (
+      <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-200">
+        Complete
+      </span>
+    );
   } else {
-    status = <span>Over capacity</span>;
+    countColor = "text-red-600";
+    status = (
+      <span className="inline-flex items-center rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide text-red-700 ring-1 ring-red-200">
+        Over capacity
+      </span>
+    );
   }
 
   const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -65,8 +81,15 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
           className="w-full pr-10 text-2xl font-bold text-slate-800 bg-transparent border-0 border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none px-0 py-1"
         />
 
-        <div>
-          <div>Entries: {totalEntries}</div>
+        <div className="mt-2 flex items-center gap-4">
+          <div className="flex items-baseline gap-2">
+            <span className={`text-xl font-bold tabular-nums leading-none ${countColor}`}>
+              {totalEntries}
+            </span>
+            <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              / 45 entries
+            </span>
+          </div>
           {status}
         </div>
 
