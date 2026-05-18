@@ -1,5 +1,6 @@
 import type { EditorBoardState, EditorCategory } from "../types/editorTypes";
 import { useState } from 'react';
+import { CategoryForm } from "./CategoryForm";
 
 export function EditorBoard({ initialState }: { initialState: EditorBoardState }) {
 
@@ -23,9 +24,9 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
     e.currentTarget.value = '';
   };
 
-  const updateCategory = (id: string, value: string) => {
+  const updateCategoryTitle = (catId: string, newTitle: string) => {
     const updated = state.categories.map(item =>
-      item.id === id ? { ...item, title: value } : item
+      item.id === catId ? { ...item, title: newTitle } : item
     );
     setState({ ...state, categories: updated })
   }
@@ -35,21 +36,11 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
       <ol className='ml-8 list-decimal'>
         {
           state.categories.map((category: EditorCategory) => (
-            <li key={category.id}>
-              <div>
-                <input id={`title-${category.id}`}
-                  defaultValue={category.title}
-                  onBlur={(e) => updateCategory(category.id, e.currentTarget.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') e.currentTarget.blur();
-                    if (e.key === 'Escape') {
-                      e.currentTarget.value = category.title;
-                      e.currentTarget.blur();
-                    }
-                  }}
-                />
-              </div>
-            </li>
+            <CategoryForm
+              key={category.id}
+              initialCategory={category}
+              onUpdateTitle={updateCategoryTitle}
+            />
           ))
         }
       </ol>
