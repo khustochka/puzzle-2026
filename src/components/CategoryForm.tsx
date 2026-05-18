@@ -9,6 +9,17 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
   onDeleteWord: (catId: string, wordId: string) => void;
 }) {
 
+  const totalEntries = category.entries.length;
+
+  let status;
+  if (totalEntries < 45) {
+    status = <span>In progress</span>;
+  } else if (totalEntries === 45) {
+    status = <span>Complete</span>;
+  } else {
+    status = <span>Over capacity</span>;
+  }
+
   const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') e.currentTarget.blur();
     if (e.key === 'Escape') {
@@ -54,6 +65,11 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
           className="w-full pr-10 text-2xl font-bold text-slate-800 bg-transparent border-0 border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none px-0 py-1"
         />
 
+        <div>
+          <div>Entries: {totalEntries}</div>
+          {status}
+        </div>
+
         <ol className="mt-4 flex flex-wrap gap-2 list-none p-0">
           {
             category.entries.map((entry) => (
@@ -81,7 +97,7 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
 
         <div className="mt-4 mx-auto w-1/2 flex items-center gap-2">
           <label htmlFor={`newWord-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap">
-            Add word:
+            Add entry:
           </label>
           <input
             id={`newWord-${category.id}`}
