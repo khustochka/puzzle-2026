@@ -1,46 +1,46 @@
-import type { EditorBoardState, EditorCategory, EditorEntry } from "../types/editorTypes";
+import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 import { useState } from 'react';
 import { CategoryForm } from "./CategoryForm";
 import { AddCategoryForm } from "./AddCategoryForm"
 
-export function EditorBoard({ initialState }: { initialState: EditorBoardState }) {
+export function EditorBoard({ initialState }: { initialState: EditorCategory[] }) {
 
-  const [state, setState] = useState(initialState);
+  const [categories, setCategories] = useState(initialState);
 
-  const totalCategories = state.categories.length;
+  const totalCategories = categories.length;
 
-  const completeCategories = state.categories.reduce(
+  const completeCategories = categories.reduce(
     (count, cat) => count + (cat.entries.length >= 45 ? 1 : 0),
     0
   );
 
   const handleAddCategory = (category: EditorCategory) => {
-    setState({ ...state, categories: [...state.categories, category] })
+    setCategories([...categories, category])
   }
 
   const updateCategoryTitle = (catId: string, newTitle: string) => {
-    const updated = state.categories.map(category =>
+    const updated = categories.map(category =>
       category.id === catId ? { ...category, title: newTitle } : category
     );
-    setState({ ...state, categories: updated })
+    setCategories(updated )
   }
 
   const deleteCategory = (catId: string) => {
-    const updated = state.categories.filter(category =>
+    const updated = categories.filter(category =>
       category.id !== catId
     );
-    setState({ ...state, categories: updated })
+    setCategories(updated)
   }
 
   const handleAddWord = (catId: string, word: EditorEntry) => {
-    const updated = state.categories.map(category =>
+    const updated = categories.map(category =>
       category.id === catId ? { ...category, entries: [...category.entries, word] } : category
     );
-    setState({ ...state, categories: updated })
+    setCategories(updated)
   }
 
   const handleDeleteWord = (catId: string, wordId: string) => {
-    const updated = state.categories.map(category =>
+    const updated = categories.map(category =>
       category.id === catId ?
         {
           ...category,
@@ -48,7 +48,7 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
         } :
         category
     );
-    setState({ ...state, categories: updated })
+    setCategories(updated)
   }
 
   return (
@@ -80,7 +80,7 @@ export function EditorBoard({ initialState }: { initialState: EditorBoardState }
       <div className="w-full py-10 px-4">
         <ol className="list-decimal pl-16 marker:text-3xl marker:font-bold marker:text-indigo-600 flex flex-col gap-6">
           {
-            state.categories.map((category: EditorCategory) => (
+            categories.map((category: EditorCategory) => (
               <CategoryForm
                 key={category.id}
                 category={category}

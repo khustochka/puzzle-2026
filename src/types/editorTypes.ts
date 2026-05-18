@@ -8,7 +8,3 @@ export type EditorCategory = {
   title: string
   entries: EditorEntry[]
 }
-
-export type EditorBoardState = {
-  categories: EditorCategory[]
-}
