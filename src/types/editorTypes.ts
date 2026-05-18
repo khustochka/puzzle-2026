@@ -9,6 +9,6 @@ export type EditorCategory = {
   entries: EditorEntry[]
 }
 
-export type EditBoardState = {
+export type EditorBoardState = {
   categories: EditorCategory[]
 }

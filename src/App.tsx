@@ -1,7 +1,7 @@
-import type { EditBoardState } from './types/editTypes'
-import { EditBoard } from './components/EditBoard'
+import type { EditorBoardState } from './types/editorTypes'
+import { EditorBoard } from './components/EditorBoard'
 
-const initialState: EditBoardState = {
+const initialState: EditorBoardState = {
   categories: [
     {
       id: crypto.randomUUID(),
@@ -32,6 +32,6 @@ const initialState: EditBoardState = {
 
 export default function App() {
   return (
-    <EditBoard initialState={initialState} />
+    <EditorBoard initialState={initialState} />
   )
 }

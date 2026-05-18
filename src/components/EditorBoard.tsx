@@ -1,7 +1,7 @@
-import type { EditBoardState, EditorCategory } from "../types/editTypes";
+import type { EditorBoardState, EditorCategory } from "../types/editorTypes";
 import { useState } from 'react';
 
-export function EditBoard({ initialState }: { initialState: EditBoardState }) {
+export function EditorBoard({ initialState }: { initialState: EditorBoardState }) {
 
   const [state, setState] = useState(initialState);
 
