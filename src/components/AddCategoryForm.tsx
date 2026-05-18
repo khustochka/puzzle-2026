@@ -1,20 +1,12 @@
-import type { EditorCategory } from "../types/editorTypes";
-
 export function AddCategoryForm({ onAddCategory }: {
-  onAddCategory: (category: EditorCategory) => void;
+  onAddCategory: (title: string) => void;
 }) {
-
-  const buildCategory = (title: string): EditorCategory => ({
-    id: crypto.randomUUID(),
-    title: title,
-    entries: []
-  })
 
   const handleNewCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const value = e.currentTarget.value.trim();
       if (!value) return;
-      onAddCategory(buildCategory(value));
+      onAddCategory(value);
       e.currentTarget.value = '';
     }
     if (e.key === 'Escape') {

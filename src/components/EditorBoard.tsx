@@ -1,19 +1,47 @@
-import type { EditorCategory, EditorEntry } from "../types/editorTypes";
-import { useState, useRef, useEffect } from 'react';
+import type { EditorCategory, EditorAction } from "../types/editorTypes";
+import { useState, useRef, useEffect, useReducer } from 'react';
 import { CategoryForm } from "./CategoryForm";
 import { AddCategoryForm } from "./AddCategoryForm"
 
+function reducer(state: EditorCategory[], action: EditorAction): EditorCategory[] {
+  switch (action.type) {
+    case 'addCategory':
+      return [...state, { id: action.id, title: action.title, entries: [] }];
+    case 'updateCategoryTitle':
+      return state.map(c => c.id === action.id ? { ...c, title: action.title } : c);
+    case 'deleteCategory':
+      return state.filter(c => c.id !== action.id);
+    case 'addEntry':
+      return state.map(category =>
+        category.id === action.categoryId ?
+          { ...category,
+            entries: [...category.entries, { id: action.entryId, title: action.title }]
+          } :
+          category
+      );
+    case 'deleteEntry':
+      return state.map(category =>
+      category.id === action.categoryId ?
+        {
+          ...category,
+          entries: category.entries.filter((word) => (word.id !== action.entryId))
+        } :
+        category
+    );
+  }
+}
+
 export function EditorBoard({ initialState }: { initialState: EditorCategory[] }) {
 
-  const [categories, setCategories] = useState(initialState);
+  const [categories, dispatch] = useReducer(reducer, initialState);
   const [newlyAddedCategoryId, setNewlyAddedCategoryId] = useState<string | null>(null);
   const newlyAddedCategoryRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
-  if (newlyAddedCategoryId !== null) {
-    newlyAddedCategoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-}, [newlyAddedCategoryId]);
+    if (newlyAddedCategoryId !== null) {
+      newlyAddedCategoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [newlyAddedCategoryId]);
 
   const totalCategories = categories.length;
 
@@ -22,42 +50,27 @@ export function EditorBoard({ initialState }: { initialState: EditorCategory[] }
     0
   );
 
-  const handleAddCategory = (category: EditorCategory) => {
-    setCategories([...categories, category])
-    setNewlyAddedCategoryId(category.id)
+  const handleAddCategory = (title: string) => {
+    const id = crypto.randomUUID();
+    dispatch({ type: 'addCategory', id: id, title: title });
+    setNewlyAddedCategoryId(id)
   }
 
   const updateCategoryTitle = (catId: string, newTitle: string) => {
-    const updated = categories.map(category =>
-      category.id === catId ? { ...category, title: newTitle } : category
-    );
-    setCategories(updated )
+    dispatch({ type: 'updateCategoryTitle', id: catId, title: newTitle });
   }
 
   const deleteCategory = (catId: string) => {
-    const updated = categories.filter(category =>
-      category.id !== catId
-    );
-    setCategories(updated)
+    dispatch({ type: 'deleteCategory', id: catId });
   }
 
-  const handleAddWord = (catId: string, word: EditorEntry) => {
-    const updated = categories.map(category =>
-      category.id === catId ? { ...category, entries: [...category.entries, word] } : category
-    );
-    setCategories(updated)
+  const handleAddWord = (catId: string, title: string) => {
+    const id = crypto.randomUUID();
+    dispatch({ type: 'addEntry', categoryId: catId, entryId: id, title: title });
   }
 
-  const handleDeleteWord = (catId: string, wordId: string) => {
-    const updated = categories.map(category =>
-      category.id === catId ?
-        {
-          ...category,
-          entries: category.entries.filter((word) => (word.id !== wordId))
-        } :
-        category
-    );
-    setCategories(updated)
+  const handleDeleteWord = (catId: string, id: string) => {
+    dispatch({ type: 'deleteEntry', categoryId: catId, entryId: id });
   }
 
   return (

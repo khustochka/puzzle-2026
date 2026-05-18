@@ -8,3 +8,10 @@ export type EditorCategory = {
   title: string
   entries: EditorEntry[]
 }
+
+export type EditorAction =
+  | { type: 'addCategory'; id: string; title: string }
+  | { type: 'updateCategoryTitle'; id: string; title: string }
+  | { type: 'deleteCategory'; id: string }
+  | { type: 'addEntry'; categoryId: string; entryId: string; title: string }
+  | { type: 'deleteEntry'; categoryId: string; entryId: string };

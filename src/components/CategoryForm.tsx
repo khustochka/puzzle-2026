@@ -1,11 +1,11 @@
-import type { EditorCategory, EditorEntry } from "../types/editorTypes";
+import type { EditorCategory } from "../types/editorTypes";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onDeleteWord, ref }: {
   category: EditorCategory;
   onUpdateTitle: (id: string, newTitle: string) => void;
   onDelete: (id: string) => void;
-  onAddWord: (catId: string, word: EditorEntry) => void;
+  onAddWord: (catId: string, word: string) => void;
   onDeleteWord: (catId: string, wordId: string) => void;
   ref: React.Ref<HTMLLIElement>
 }) {
@@ -49,18 +49,13 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
     if (e.key === 'Enter') {
       const value = e.currentTarget.value.trim();
       if (!value) return;
-      onAddWord(category.id, buildEntry(value));
+      onAddWord(category.id, value);
       e.currentTarget.value = '';
     }
     if (e.key === 'Escape') {
       e.currentTarget.value = '';
     }
   };
-
-  const buildEntry = (word: string): EditorEntry => ({
-    id: crypto.randomUUID(),
-    title: word
-  })
 
 
   return (
