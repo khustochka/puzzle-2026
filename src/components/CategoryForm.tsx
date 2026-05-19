@@ -57,6 +57,17 @@ export function CategoryForm({ category, ref }: {
     if (e.key === 'Escape') setIsEditing(false)
   }
 
+  const handleDeleteCategory = () => {
+    dispatch({ type: 'deleteCategory', id: category.id })
+    console.log(`[Track] Deleted category "${category.title}" with entries:
+      ${category.entries.map((entry) => entry.title).join(", ")}`)
+  }
+
+  const handleAddWord = (title: string) => {
+    const id = crypto.randomUUID();
+    dispatch({ type: 'addEntry', categoryId: category.id, entryId: id, title: title });
+  }
+
   const handleNewWordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const value = e.currentTarget.value.trim();
@@ -69,17 +80,12 @@ export function CategoryForm({ category, ref }: {
     }
   };
 
-  const handleAddWord = (title: string) => {
-    const id = crypto.randomUUID();
-    dispatch({ type: 'addEntry', categoryId: category.id, entryId: id, title: title });
-  }
-
   return (
     <li id={`category-${category.id}`} className="pl-2" ref={ref}>
       <div className="relative rounded-2xl border border-slate-200 bg-white p-6 pr-16 shadow-md">
         <button
           type="button"
-          onClick={() => dispatch({ type: 'deleteCategory', id: category.id })}
+          onClick={handleDeleteCategory}
           aria-label="Delete category"
           className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full text-red-500 hover:bg-red-50 hover:text-red-700 transition cursor-pointer"
         >
@@ -125,7 +131,7 @@ export function CategoryForm({ category, ref }: {
         <ol className="mt-4 flex flex-wrap gap-2 list-none p-0">
           {
             category.entries.map((entry) => (
-              <EntryForm key={entry.id} entry={entry} categoryId={category.id} />
+              <EntryForm key={entry.id} entry={entry} category={category} />
             ))
           }
         </ol>

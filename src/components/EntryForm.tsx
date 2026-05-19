@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useEditor } from "../hooks/useEditor";
-import type { EditorEntry } from "../types/editorTypes";
+import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export function EntryForm({ categoryId, entry }: {
-  categoryId: string;
+export function EntryForm({ category, entry }: {
+  category: EditorCategory;
   entry: EditorEntry
 }) {
 
@@ -19,13 +19,18 @@ export function EntryForm({ categoryId, entry }: {
   )
   const handleEntryUpdate = () => {
     if (entryInputRef.current)
-      dispatch({ type: 'updateEntry', categoryId: categoryId, entryId: entry.id, title: entryInputRef.current?.value });
+      dispatch({ type: 'updateEntry', categoryId: category.id, entryId: entry.id, title: entryInputRef.current?.value });
     setIsEditing(false)
   }
 
   const handleEntryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleEntryUpdate();
     if (e.key === 'Escape') setIsEditing(false)
+  }
+
+  const handleDeleteEntry = () => {
+    dispatch({ type: 'deleteEntry', categoryId: category.id, entryId: entry.id })
+    console.log(`[Track] Deleted entry "${entry.title}" from category "${category.title}"`)
   }
 
   return (
@@ -58,7 +63,7 @@ export function EntryForm({ categoryId, entry }: {
             <span aria-hidden="true" className="h-4 w-px bg-indigo-300 ml-2" />
             <button
               type="button"
-              onClick={() => dispatch({ type: 'deleteEntry', categoryId: categoryId, entryId: entry.id })}
+              onClick={handleDeleteEntry}
               aria-label="Delete word"
               className="flex h-5 w-5 items-center justify-center rounded text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
             >

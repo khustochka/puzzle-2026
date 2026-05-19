@@ -32,7 +32,7 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
             {
               ...category,
               entries: category.entries.map(entry => (
-                entry.id === action.entryId ? {...entry, title: action.title} : entry
+                entry.id === action.entryId ? { ...entry, title: action.title } : entry
               ))
             } :
             category
