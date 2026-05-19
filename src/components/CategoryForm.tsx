@@ -75,7 +75,7 @@ export function CategoryForm({ category, ref }: {
 
   return (
     <li id={`category-${category.id}`} className="pl-2" ref={ref}>
-      <div className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
+      <div className="relative rounded-2xl border border-slate-200 bg-white p-6 pr-16 shadow-md">
         <button
           type="button"
           onClick={() => dispatch({ type: 'deleteCategory', id: category.id })}
@@ -86,16 +86,25 @@ export function CategoryForm({ category, ref }: {
         </button>
         {
           isEditing ?
-            <div>
+            <div className="flex items-center gap-2">
               <input
                 defaultValue={category.title}
                 onKeyDown={(e) => handleTitleKeyDown(e)}
                 ref={titleInputRef}
-                className="w-full pr-10 text-2xl font-bold text-slate-800 bg-transparent border-0 border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none px-0 py-1"
+                className="flex-1 min-w-0 text-2xl font-bold leading-tight text-slate-800 bg-white rounded-md border border-slate-300 shadow-sm px-2 py-1 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />
-              <button onClick={handleTitleUpdate}>Save</button>
+              <button
+                type="button"
+                onClick={handleTitleUpdate}
+                className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
+              >
+                Save
+              </button>
             </div> :
-            <h2 className="hover:bg-yellow-100 inline-block" onClick={() => { setIsEditing(true) }}>
+            <h2
+              onClick={() => setIsEditing(true)}
+              className="inline-block max-w-full text-2xl font-bold leading-tight text-slate-800 px-1 py-1 -mx-1 rounded cursor-text border-b-2 border-transparent hover:bg-yellow-100 transition"
+            >
               {category.title}
             </h2>
         }
