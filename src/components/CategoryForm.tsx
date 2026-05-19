@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react";
 import { useEditor } from "../hooks/useEditor";
 import type { EditorCategory } from "../types/editorTypes";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -7,7 +8,15 @@ export function CategoryForm({ category, ref }: {
   ref: React.Ref<HTMLLIElement>
 }) {
 
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const { dispatch } = useEditor();
+
+  useEffect(() => {
+    titleInputRef.current?.focus()
+  },
+    [isEditing]
+  )
 
   const totalEntries = category.entries.length;
 
@@ -36,12 +45,15 @@ export function CategoryForm({ category, ref }: {
     );
   }
 
+  const handleTitleUpdate = () => {
+    if (titleInputRef.current)
+      dispatch({ type: 'updateCategoryTitle', id: category.id, title: titleInputRef.current?.value });
+    setIsEditing(false)
+  }
+
   const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') e.currentTarget.blur();
-    if (e.key === 'Escape') {
-      e.currentTarget.value = category.title;
-      e.currentTarget.blur();
-    }
+    if (e.key === 'Enter') handleTitleUpdate();
+    if (e.key === 'Escape') setIsEditing(false)
   }
 
   const handleNewWordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -72,13 +84,21 @@ export function CategoryForm({ category, ref }: {
         >
           <TrashIcon className="h-5 w-5" />
         </button>
-
-        <input
-          defaultValue={category.title}
-          onBlur={(e) => dispatch({ type: 'updateCategoryTitle', id: category.id, title: e.currentTarget.value })}
-          onKeyDown={(e) => handleTitleKeyDown(e)}
-          className="w-full pr-10 text-2xl font-bold text-slate-800 bg-transparent border-0 border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none px-0 py-1"
-        />
+        {
+          isEditing ?
+            <div>
+              <input
+                defaultValue={category.title}
+                onKeyDown={(e) => handleTitleKeyDown(e)}
+                ref={titleInputRef}
+                className="w-full pr-10 text-2xl font-bold text-slate-800 bg-transparent border-0 border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none px-0 py-1"
+              />
+              <button onClick={handleTitleUpdate}>Save</button>
+            </div> :
+            <h2 className="hover:bg-yellow-100 inline-block" onClick={() => { setIsEditing(true) }}>
+              {category.title}
+            </h2>
+        }
 
         <div className="mt-2 flex items-center gap-4">
           <div className="flex items-baseline gap-2">
@@ -106,7 +126,7 @@ export function CategoryForm({ category, ref }: {
                 />
                 <button
                   type="button"
-                  onClick={() => dispatch({ type: 'deleteEntry', categoryId: category.id, entryId: entry.id})}
+                  onClick={() => dispatch({ type: 'deleteEntry', categoryId: category.id, entryId: entry.id })}
                   aria-label="Delete word"
                   className="flex h-5 w-5 items-center justify-center rounded-full text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
                 >
