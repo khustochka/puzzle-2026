@@ -27,13 +27,13 @@ export function EditorBoard() {
     <div className="min-h-screen bg-slate-100">
       <div className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur shadow-sm">
         <div className="flex flex-wrap items-start gap-8 px-6 py-4">
-          <div className="mt-3 flex items-center gap-8">
+          <div className="mt-4 flex items-center gap-8">
             <div className="flex items-center gap-3">
               <span className="text-2xl font-bold tabular-nums text-amber-800 leading-none">
                 {totalCategories}
               </span>
               <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                Total<br />categories
+                Categories
               </span>
             </div>
             <div className="flex items-center gap-3">

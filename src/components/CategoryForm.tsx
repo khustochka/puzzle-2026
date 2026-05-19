@@ -128,7 +128,7 @@ export function CategoryForm({ category, ref }: {
           {status}
         </div>
 
-        <ol className="mt-4 flex flex-wrap gap-2 list-none p-0">
+        <ol className="mt-6 flex flex-wrap gap-2 list-none p-0">
           {
             category.entries.map((entry) => (
               <EntryForm key={entry.id} entry={entry} category={category} />
@@ -136,16 +136,18 @@ export function CategoryForm({ category, ref }: {
           }
         </ol>
 
-        <div className="mt-4 mx-auto w-1/2 flex items-center gap-2">
-          <label htmlFor={`newWord-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap">
-            Add entry:
-          </label>
-          <input
-            id={`newWord-${category.id}`}
-            defaultValue=""
-            onKeyDown={handleNewWordKeyDown}
-            className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          />
+        <div className="mt-6 border-t-2 border-dashed border-slate-300 pt-5">
+          <div className="w-1/2 flex items-center gap-2">
+            <label htmlFor={`newWord-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap">
+              Add entry:
+            </label>
+            <input
+              id={`newWord-${category.id}`}
+              defaultValue=""
+              onKeyDown={handleNewWordKeyDown}
+              className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
         </div>
       </div>
     </li>
