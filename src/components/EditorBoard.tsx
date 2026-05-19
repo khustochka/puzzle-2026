@@ -29,23 +29,6 @@ export function EditorBoard() {
     setNewlyAddedCategoryId(id)
   }
 
-  const updateCategoryTitle = (catId: string, newTitle: string) => {
-    dispatch({ type: 'updateCategoryTitle', id: catId, title: newTitle });
-  }
-
-  const deleteCategory = (catId: string) => {
-    dispatch({ type: 'deleteCategory', id: catId });
-  }
-
-  const handleAddWord = (catId: string, title: string) => {
-    const id = crypto.randomUUID();
-    dispatch({ type: 'addEntry', categoryId: catId, entryId: id, title: title });
-  }
-
-  const handleDeleteWord = (catId: string, id: string) => {
-    dispatch({ type: 'deleteEntry', categoryId: catId, entryId: id });
-  }
-
   return (
     <div className="min-h-screen bg-slate-100">
       <div className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur shadow-sm">
@@ -80,10 +63,6 @@ export function EditorBoard() {
                 ref={category.id === newlyAddedCategoryId ? newlyAddedCategoryRef : null}
                 key={category.id}
                 category={category}
-                onUpdateTitle={updateCategoryTitle}
-                onDelete={deleteCategory}
-                onAddWord={handleAddWord}
-                onDeleteWord={handleDeleteWord}
               />
             ))
           }

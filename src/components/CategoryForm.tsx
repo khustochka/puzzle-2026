@@ -1,14 +1,13 @@
+import { useEditor } from "../hooks/useEditor";
 import type { EditorCategory } from "../types/editorTypes";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onDeleteWord, ref }: {
+export function CategoryForm({ category, ref }: {
   category: EditorCategory;
-  onUpdateTitle: (id: string, newTitle: string) => void;
-  onDelete: (id: string) => void;
-  onAddWord: (catId: string, word: string) => void;
-  onDeleteWord: (catId: string, wordId: string) => void;
   ref: React.Ref<HTMLLIElement>
 }) {
+
+  const { dispatch } = useEditor();
 
   const totalEntries = category.entries.length;
 
@@ -49,7 +48,7 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
     if (e.key === 'Enter') {
       const value = e.currentTarget.value.trim();
       if (!value) return;
-      onAddWord(category.id, value);
+      handleAddWord(value);
       e.currentTarget.value = '';
     }
     if (e.key === 'Escape') {
@@ -57,13 +56,17 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
     }
   };
 
+  const handleAddWord = (title: string) => {
+    const id = crypto.randomUUID();
+    dispatch({ type: 'addEntry', categoryId: category.id, entryId: id, title: title });
+  }
 
   return (
     <li id={`category-${category.id}`} className="pl-2" ref={ref}>
       <div className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
         <button
           type="button"
-          onClick={() => onDelete(category.id)}
+          onClick={() => dispatch({ type: 'deleteCategory', id: category.id })}
           aria-label="Delete category"
           className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full text-red-500 hover:bg-red-50 hover:text-red-700 transition cursor-pointer"
         >
@@ -72,7 +75,7 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
 
         <input
           defaultValue={category.title}
-          onBlur={(e) => onUpdateTitle(category.id, e.currentTarget.value)}
+          onBlur={(e) => dispatch({ type: 'updateCategoryTitle', id: category.id, title: e.currentTarget.value })}
           onKeyDown={(e) => handleTitleKeyDown(e)}
           className="w-full pr-10 text-2xl font-bold text-slate-800 bg-transparent border-0 border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none px-0 py-1"
         />
@@ -103,7 +106,7 @@ export function CategoryForm({ category, onUpdateTitle, onDelete, onAddWord, onD
                 />
                 <button
                   type="button"
-                  onClick={() => onDeleteWord(category.id, entry.id)}
+                  onClick={() => dispatch({ type: 'deleteEntry', categoryId: category.id, entryId: entry.id})}
                   aria-label="Delete word"
                   className="flex h-5 w-5 items-center justify-center rounded-full text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
                 >
