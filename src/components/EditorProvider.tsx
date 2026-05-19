@@ -5,11 +5,20 @@ import type { EditorState, EditorCategory, EditorAction } from "../types/editorT
 function reducer(state: EditorState, action: EditorAction): EditorState {
   const { categories } = state;
   switch (action.type) {
-    case 'addCategory':
-      return {
+    case 'addCategory': {
+      const newTitleNormalized = action.title.toLowerCase();
+      if (categories.some(c => c.title.toLowerCase() === newTitleNormalized ))
+        return {
+          ...state,
+          newlyAddedCategoryId: null,
+          addCategoryError: "Category with this name already exists."
+        };
+      else return {
         newlyAddedCategoryId: action.id,
+        addCategoryError: null,
         categories: [...categories, { id: action.id, title: action.title, entries: [] }]
       };
+    }
     case 'updateCategoryTitle':
       return { ...state, categories: categories.map(c => c.id === action.id ? { ...c, title: action.title } : c) };
     case 'deleteCategory':
@@ -49,13 +58,16 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
             category
         )
       };
+    case 'clearAddCategoryError':
+      return {...state, addCategoryError: null }
   }
 }
 
 export function EditorProvider({ children, categories }: { children: React.ReactNode, categories: EditorCategory[] }) {
   const initialState = {
     categories: categories,
-    newlyAddedCategoryId: null
+    newlyAddedCategoryId: null,
+    addCategoryError: null
   }
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
