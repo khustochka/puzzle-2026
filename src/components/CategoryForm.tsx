@@ -11,7 +11,7 @@ export function CategoryForm({ category, ref }: {
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const { dispatch } = useEditor();
+  const { state: { addWordError }, dispatch } = useEditor();
 
   useEffect(() => {
     if (isEditing) titleInputRef.current?.focus()
@@ -70,12 +70,14 @@ export function CategoryForm({ category, ref }: {
 
   const handleNewWordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      dispatch({ type: 'clearErrors' });
       const value = e.currentTarget.value.trim();
       if (!value) return;
       handleAddWord(value);
       e.currentTarget.value = '';
     }
     if (e.key === 'Escape') {
+      dispatch({ type: 'clearErrors' });
       e.currentTarget.value = '';
     }
   };
@@ -137,16 +139,27 @@ export function CategoryForm({ category, ref }: {
         </ol>
 
         <div className="mt-6 border-t-2 border-dashed border-slate-300 pt-5">
-          <div className="w-1/2 flex items-center gap-2">
-            <label htmlFor={`newWord-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap">
+          <div className="w-1/2 flex items-start gap-2">
+            <label htmlFor={`newWord-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap pt-1.5">
               Add entry:
             </label>
-            <input
-              id={`newWord-${category.id}`}
-              defaultValue=""
-              onKeyDown={handleNewWordKeyDown}
-              className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-            />
+            <div className="flex-1 flex flex-col gap-1">
+              <input
+                id={`newWord-${category.id}`}
+                defaultValue=""
+                onKeyDown={handleNewWordKeyDown}
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+              />
+              {addWordError && addWordError.categoryId == category.id && (
+                <p
+                  id="newCategory-error"
+                  role="alert"
+                  className="text-sm font-medium text-red-600"
+                >
+                  {addWordError.message}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ export type EditorState = {
   categories: EditorCategory[];
   newlyAddedCategoryId: string | null;
   addCategoryError: string | null;
+  addWordError: {categoryId: string, message: string} | null;
 };
 
 export type EditorAction =
@@ -22,4 +23,4 @@ export type EditorAction =
   | { type: 'addEntry'; categoryId: string; entryId: string; title: string }
   | { type: 'updateEntry'; categoryId: string; entryId: string; title: string }
   | { type: 'deleteEntry'; categoryId: string; entryId: string }
-  | { type: 'clearAddCategoryError' };
+  | { type: 'clearErrors' };

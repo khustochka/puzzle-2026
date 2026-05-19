@@ -19,13 +19,14 @@ export function AddCategoryForm() {
 
   const handleNewCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      dispatch({ type: 'clearErrors' })
       const value = e.currentTarget.value.trim();
       if (!value) return;
       handleAddCategory(value);
     }
     if (e.key === 'Escape') {
+      dispatch({ type: 'clearErrors' })
       e.currentTarget.value = '';
-      dispatch({ type: 'clearAddCategoryError' })
     }
   };
 
@@ -35,10 +36,11 @@ export function AddCategoryForm() {
         Add category:
       </label>
       <input
+        id='newCategory'
         ref={inputRef}
         defaultValue=""
         onKeyDown={handleNewCategoryKeyDown}
-        onChange={() => dispatch({ type: 'clearAddCategoryError' })}
+        onChange={() => dispatch({ type: 'clearErrors' })}
         aria-invalid={addCategoryError ? true : undefined}
         aria-describedby={addCategoryError ? "newCategory-error" : undefined}
         className={`rounded-md border bg-white px-3 py-2 text-sm shadow-sm outline-none ${addCategoryError

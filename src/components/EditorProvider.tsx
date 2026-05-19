@@ -3,18 +3,31 @@ import { EditorContext } from "../contexts/EditorContext";
 import type { EditorState, EditorCategory, EditorAction } from "../types/editorTypes";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
+// Returns the id of the category where duplicate was found
+function validateWordUniqueness(categories: EditorCategory[], word: string): EditorCategory | null {
+  const wordNormalized = word.toLowerCase();
+
+  const categoryWithDup = categories.find(
+    (category) => category.entries.some(e => e.title.toLowerCase() === wordNormalized )
+  )
+
+  if (categoryWithDup) return categoryWithDup;
+  return null
+}
+
 function reducer(state: EditorState, action: EditorAction): EditorState {
   const { categories } = state;
   switch (action.type) {
     case 'addCategory': {
       const newTitleNormalized = action.title.toLowerCase();
-      if (categories.some(c => c.title.toLowerCase() === newTitleNormalized ))
+      if (categories.some(c => c.title.toLowerCase() === newTitleNormalized))
         return {
           ...state,
           newlyAddedCategoryId: null,
           addCategoryError: "Category with this name already exists."
         };
       else return {
+        ...state,
         newlyAddedCategoryId: action.id,
         addCategoryError: null,
         categories: [...categories, { id: action.id, title: action.title, entries: [] }]
@@ -25,8 +38,19 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
     case 'deleteCategory':
       return { ...state, categories: categories.filter(c => c.id !== action.id) };
     case 'addEntry':
-      return {
-        ...state, categories: categories.map(category =>
+      {
+        const categoryWithDup = validateWordUniqueness(categories, action.title);
+      if (categoryWithDup) return {
+        ...state,
+        addWordError: {
+          categoryId: action.categoryId,
+          message: `The word "${action.title}" already exists in category "${categoryWithDup.title}"`
+        }
+      };
+      else return {
+        ...state,
+        addWordError: null,
+        categories: categories.map(category =>
           category.id === action.categoryId ?
             {
               ...category,
@@ -35,6 +59,7 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
             category
         )
       };
+    }
     case 'updateEntry':
       return {
         ...state, categories: categories.map(category =>
@@ -59,8 +84,8 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
             category
         )
       };
-    case 'clearAddCategoryError':
-      return {...state, addCategoryError: null }
+    case 'clearErrors':
+      return { ...state, addCategoryError: null, addWordError: null }
   }
 }
 
@@ -70,7 +95,8 @@ export function EditorProvider({ children, initialCategories }: { children: Reac
   const initialState = {
     categories: savedCategories,
     newlyAddedCategoryId: null,
-    addCategoryError: null
+    addCategoryError: null,
+    addWordError: null
   }
   const [state, dispatch] = useReducer(reducer, initialState);
 
