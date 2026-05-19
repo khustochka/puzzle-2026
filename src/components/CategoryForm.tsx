@@ -48,7 +48,7 @@ export function CategoryForm({ category, ref }: {
 
   const handleTitleUpdate = () => {
     if (titleInputRef.current)
-      dispatch({ type: 'updateCategoryTitle', id: category.id, title: titleInputRef.current?.value });
+      dispatch({ type: 'updateCategoryTitle', id: category.id, title: titleInputRef.current?.value?.trim() });
     setIsEditing(false)
   }
 

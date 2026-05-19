@@ -19,7 +19,7 @@ export function EntryForm({ category, entry }: {
   )
   const handleEntryUpdate = () => {
     if (entryInputRef.current)
-      dispatch({ type: 'updateEntry', categoryId: category.id, entryId: entry.id, title: entryInputRef.current?.value });
+      dispatch({ type: 'updateEntry', categoryId: category.id, entryId: entry.id, title: entryInputRef.current?.value?.trim() });
     setIsEditing(false)
   }
 
