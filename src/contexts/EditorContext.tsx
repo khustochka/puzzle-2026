@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import type { EditorCategory, EditorAction } from "../types/editorTypes";
+import type { EditorState, EditorAction } from "../types/editorTypes";
 
 export const EditorContext = createContext<{
-  categories: EditorCategory[];
+  state: EditorState;
   dispatch: React.Dispatch<EditorAction>;
 } | null>(null);

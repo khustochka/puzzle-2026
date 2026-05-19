@@ -1,12 +1,19 @@
-export function AddCategoryForm({ onAddCategory }: {
-  onAddCategory: (title: string) => void;
-}) {
+import { useEditor } from "../hooks/useEditor";
+
+export function AddCategoryForm() {
+
+  const { dispatch } = useEditor();
+
+  const handleAddCategory = (title: string) => {
+    const id = crypto.randomUUID();
+    dispatch({ type: 'addCategory', id: id, title: title });
+  }
 
   const handleNewCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const value = e.currentTarget.value.trim();
       if (!value) return;
-      onAddCategory(value);
+      handleAddCategory(value);
       e.currentTarget.value = '';
     }
     if (e.key === 'Escape') {

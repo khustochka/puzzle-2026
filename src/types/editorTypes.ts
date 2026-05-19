@@ -9,6 +9,11 @@ export type EditorCategory = {
   entries: EditorEntry[]
 }
 
+export type EditorState = {
+  categories: EditorCategory[];
+  newlyAddedCategoryId: string | null;
+};
+
 export type EditorAction =
   | { type: 'addCategory'; id: string; title: string }
   | { type: 'updateCategoryTitle'; id: string; title: string }

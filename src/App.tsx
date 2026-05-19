@@ -2,7 +2,7 @@ import type { EditorCategory } from './types/editorTypes'
 import { EditorBoard } from './components/EditorBoard'
 import { EditorProvider } from './components/EditorProvider'
 
-const initialState: EditorCategory[] = [
+const initialCategories: EditorCategory[] = [
   {
     id: crypto.randomUUID(),
     title: "Pokémon",
@@ -32,7 +32,7 @@ const initialState: EditorCategory[] = [
 export default function App() {
   return (
 
-    <EditorProvider initialState={initialState}>
+    <EditorProvider categories={initialCategories}>
       <EditorBoard />
     </EditorProvider>
   )

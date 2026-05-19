@@ -1,13 +1,13 @@
 import type { EditorCategory } from "../types/editorTypes";
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { CategoryForm } from "./CategoryForm";
 import { AddCategoryForm } from "./AddCategoryForm"
 import { useEditor } from "../hooks/useEditor";
 
 export function EditorBoard() {
 
-  const { categories, dispatch } = useEditor();
-  const [newlyAddedCategoryId, setNewlyAddedCategoryId] = useState<string | null>(null);
+  const { state: { categories, newlyAddedCategoryId } } = useEditor();
+
   const newlyAddedCategoryRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
@@ -22,12 +22,6 @@ export function EditorBoard() {
     (count, cat) => count + (cat.entries.length >= 45 ? 1 : 0),
     0
   );
-
-  const handleAddCategory = (title: string) => {
-    const id = crypto.randomUUID();
-    dispatch({ type: 'addCategory', id: id, title: title });
-    setNewlyAddedCategoryId(id)
-  }
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -50,7 +44,7 @@ export function EditorBoard() {
             </span>
           </div>
           <div className="ml-auto flex-1 min-w-65">
-            <AddCategoryForm onAddCategory={handleAddCategory} />
+            <AddCategoryForm />
           </div>
         </div>
       </div>
