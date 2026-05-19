@@ -29,33 +29,42 @@ export function EntryForm({ categoryId, entry }: {
   }
 
   return (
-    <li
-      className="inline-flex items-center gap-1 rounded-full bg-indigo-50 pl-3 pr-1 py-1 text-sm font-medium text-indigo-800 ring-1 ring-indigo-200"
-    >
+    <li className="inline-flex items-center gap-1 rounded-md bg-indigo-50 pl-3 pr-1 py-1 text-sm font-medium text-indigo-800">
       {
         isEditing ?
-          <div>
+          <>
             <input
               defaultValue={entry.title}
-              className="bg-transparent border-0 outline-none focus:ring-0 p-0 m-0 text-sm font-medium text-indigo-800"
               ref={entryInputRef}
               onKeyDown={handleEntryKeyDown}
+              size={20}
+              className="bg-white rounded-md border border-indigo-300 shadow-sm px-2 py-0.5 text-sm font-medium text-indigo-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
             />
-            <button onClick={handleEntryUpdate}>Save</button>
-          </div> :
-          <div>
-            <span onClick={() => setIsEditing(true)}>
+            <button
+              type="button"
+              onClick={handleEntryUpdate}
+              className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
+            >
+              Save
+            </button>
+          </> :
+          <>
+            <span
+              onClick={() => setIsEditing(true)}
+              className="cursor-text rounded px-0.5 py-0.5 -mx-1 hover:bg-yellow-100 transition"
+            >
               {entry.title}
             </span>
+            <span aria-hidden="true" className="h-4 w-px bg-indigo-300 ml-2" />
             <button
               type="button"
               onClick={() => dispatch({ type: 'deleteEntry', categoryId: categoryId, entryId: entry.id })}
               aria-label="Delete word"
-              className="flex h-5 w-5 items-center justify-center rounded-full text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
+              className="flex h-5 w-5 items-center justify-center rounded text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
             >
               <XMarkIcon className="h-4 w-4" />
             </button>
-          </div>
+          </>
       }
     </li>
   )

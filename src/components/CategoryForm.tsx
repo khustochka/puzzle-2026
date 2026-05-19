@@ -104,7 +104,7 @@ export function CategoryForm({ category, ref }: {
             </div> :
             <h2
               onClick={() => setIsEditing(true)}
-              className="inline-block max-w-full text-2xl font-bold leading-tight text-slate-800 px-1 py-1 -mx-1 rounded cursor-text border-b-2 border-transparent hover:bg-yellow-100 transition"
+              className="max-w-full text-2xl font-bold leading-tight text-slate-800 px-1 py-1 -mx-1 rounded cursor-text border-b-2 border-transparent hover:bg-yellow-100 transition"
             >
               {category.title}
             </h2>
