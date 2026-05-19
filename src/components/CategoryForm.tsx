@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useEditor } from "../hooks/useEditor";
 import type { EditorCategory } from "../types/editorTypes";
-import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { EntryForm } from "./EntryForm";
 
 export function CategoryForm({ category, ref }: {
   category: EditorCategory;
@@ -13,7 +14,7 @@ export function CategoryForm({ category, ref }: {
   const { dispatch } = useEditor();
 
   useEffect(() => {
-    titleInputRef.current?.focus()
+    if (isEditing) titleInputRef.current?.focus()
   },
     [isEditing]
   )
@@ -124,24 +125,7 @@ export function CategoryForm({ category, ref }: {
         <ol className="mt-4 flex flex-wrap gap-2 list-none p-0">
           {
             category.entries.map((entry) => (
-              <li
-                key={entry.id}
-                className="inline-flex items-center gap-1 rounded-full bg-indigo-50 pl-3 pr-1 py-1 text-sm font-medium text-indigo-800 ring-1 ring-indigo-200"
-              >
-                <input
-                  defaultValue={entry.title}
-                  className="bg-transparent border-0 outline-none focus:ring-0 p-0 m-0 text-sm font-medium text-indigo-800"
-                  size={Math.max(entry.title.length, 4)}
-                />
-                <button
-                  type="button"
-                  onClick={() => dispatch({ type: 'deleteEntry', categoryId: category.id, entryId: entry.id })}
-                  aria-label="Delete word"
-                  className="flex h-5 w-5 items-center justify-center rounded-full text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
-                >
-                  <XMarkIcon className="h-4 w-4" />
-                </button>
-              </li>
+              <EntryForm key={entry.id} entry={entry} categoryId={category.id} />
             ))
           }
         </ol>

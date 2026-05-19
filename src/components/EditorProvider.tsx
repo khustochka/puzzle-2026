@@ -25,6 +25,19 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
             category
         )
       };
+    case 'updateEntry':
+      return {
+        ...state, categories: categories.map(category =>
+          category.id === action.categoryId ?
+            {
+              ...category,
+              entries: category.entries.map(entry => (
+                entry.id === action.entryId ? {...entry, title: action.title} : entry
+              ))
+            } :
+            category
+        )
+      };
     case 'deleteEntry':
       return {
         ...state, categories: categories.map(category =>

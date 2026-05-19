@@ -19,4 +19,5 @@ export type EditorAction =
   | { type: 'updateCategoryTitle'; id: string; title: string }
   | { type: 'deleteCategory'; id: string }
   | { type: 'addEntry'; categoryId: string; entryId: string; title: string }
+  | { type: 'updateEntry'; categoryId: string; entryId: string; title: string }
   | { type: 'deleteEntry'; categoryId: string; entryId: string };
