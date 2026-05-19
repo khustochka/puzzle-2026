@@ -1,5 +1,6 @@
 import type { EditorCategory } from './types/editorTypes'
 import { EditorBoard } from './components/EditorBoard'
+import { EditorProvider } from './components/EditorProvider'
 
 const initialState: EditorCategory[] = [
   {
@@ -30,6 +31,9 @@ const initialState: EditorCategory[] = [
 
 export default function App() {
   return (
-    <EditorBoard initialState={initialState} />
+
+    <EditorProvider initialState={initialState}>
+      <EditorBoard />
+    </EditorProvider>
   )
 }

@@ -1,39 +1,12 @@
-import type { EditorCategory, EditorAction } from "../types/editorTypes";
-import { useState, useRef, useEffect, useReducer } from 'react';
+import type { EditorCategory } from "../types/editorTypes";
+import { useState, useRef, useEffect } from 'react';
 import { CategoryForm } from "./CategoryForm";
 import { AddCategoryForm } from "./AddCategoryForm"
+import { useEditor } from "../hooks/useEditor";
 
-function reducer(state: EditorCategory[], action: EditorAction): EditorCategory[] {
-  switch (action.type) {
-    case 'addCategory':
-      return [...state, { id: action.id, title: action.title, entries: [] }];
-    case 'updateCategoryTitle':
-      return state.map(c => c.id === action.id ? { ...c, title: action.title } : c);
-    case 'deleteCategory':
-      return state.filter(c => c.id !== action.id);
-    case 'addEntry':
-      return state.map(category =>
-        category.id === action.categoryId ?
-          { ...category,
-            entries: [...category.entries, { id: action.entryId, title: action.title }]
-          } :
-          category
-      );
-    case 'deleteEntry':
-      return state.map(category =>
-      category.id === action.categoryId ?
-        {
-          ...category,
-          entries: category.entries.filter((word) => (word.id !== action.entryId))
-        } :
-        category
-    );
-  }
-}
+export function EditorBoard() {
 
-export function EditorBoard({ initialState }: { initialState: EditorCategory[] }) {
-
-  const [categories, dispatch] = useReducer(reducer, initialState);
+  const { categories, dispatch } = useEditor();
   const [newlyAddedCategoryId, setNewlyAddedCategoryId] = useState<string | null>(null);
   const newlyAddedCategoryRef = useRef<HTMLLIElement | null>(null);
 
