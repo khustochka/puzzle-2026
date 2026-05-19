@@ -1,6 +1,7 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { EditorContext } from "../contexts/EditorContext";
 import type { EditorState, EditorCategory, EditorAction } from "../types/editorTypes";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 function reducer(state: EditorState, action: EditorAction): EditorState {
   const { categories } = state;
@@ -63,13 +64,21 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
   }
 }
 
-export function EditorProvider({ children, categories }: { children: React.ReactNode, categories: EditorCategory[] }) {
+export function EditorProvider({ children, initialCategories }: { children: React.ReactNode, initialCategories: EditorCategory[] }) {
+  const [savedCategories, setSavedCategories] = useLocalStorage('editor_categories', initialCategories)
+
   const initialState = {
-    categories: categories,
+    categories: savedCategories,
     newlyAddedCategoryId: null,
     addCategoryError: null
   }
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(
+    () => setSavedCategories(state.categories),
+    [state.categories, setSavedCategories]
+  )
+
   return (
     <EditorContext.Provider value={{ state, dispatch }}>
       {children}
