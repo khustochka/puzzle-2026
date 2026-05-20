@@ -5,10 +5,13 @@ import { AddCategoryForm } from "./AddCategoryForm"
 import { useEditor } from "../hooks/useEditor";
 
 export function EditorBoard() {
-  const { state: { categories, newlyAddedCategoryId } } = useEditor();
+  const { state: { categories, newlyAddedCategoryId }, dispatch } = useEditor();
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
 
   const newlyAddedCategoryRef = useRef<HTMLLIElement | null>(null);
+  const importTextRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     if (newlyAddedCategoryId !== null) {
@@ -24,6 +27,34 @@ export function EditorBoard() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [exportDialogOpen]);
+
+  const closeImportDialog = () => {
+    setImportDialogOpen(false);
+    setImportError(null);
+  };
+
+  useEffect(() => {
+    if (!importDialogOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeImportDialog();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [importDialogOpen]);
+
+  const handleImport = () => {
+    const importJson = importTextRef.current?.value.trim();
+    if (importJson) {
+      try {
+        const parsedData = JSON.parse(importJson);
+        dispatch({ type: 'replaceCategories', data: parsedData });
+        closeImportDialog();
+      }
+      catch {
+        setImportError("Failed to parse the data")
+      }
+    }
+  }
 
   const totalCategories = categories.length;
 
@@ -55,13 +86,22 @@ export function EditorBoard() {
                 </span>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => setExportDialogOpen(true)}
-              className="self-start text-sm font-medium text-indigo-600 underline decoration-dashed decoration-1 underline-offset-4 hover:text-indigo-800 hover:decoration-solid transition cursor-pointer focus:outline-none focus-visible:outline-none"
-            >
-              Export
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setExportDialogOpen(true)}
+                className="text-sm font-medium text-indigo-600 underline decoration-dashed decoration-1 underline-offset-4 hover:text-indigo-800 hover:decoration-solid transition cursor-pointer focus:outline-none focus-visible:outline-none"
+              >
+                Export
+              </button>
+              <button
+                type="button"
+                onClick={() => setImportDialogOpen(true)}
+                className="text-sm font-medium text-emerald-600 underline decoration-dashed decoration-1 underline-offset-4 hover:text-emerald-800 hover:decoration-solid transition cursor-pointer focus:outline-none focus-visible:outline-none"
+              >
+                Import
+              </button>
+            </div>
           </div>
           <div className="ml-auto flex-1 min-w-65">
             <AddCategoryForm />
@@ -108,6 +148,71 @@ export function EditorBoard() {
                 className="rounded-md border border-slate-300 bg-white px-4 py-1.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition cursor-pointer"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      {
+        importDialogOpen &&
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4"
+          onClick={closeImportDialog}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="import-dialog-title"
+            className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl border border-slate-200 flex flex-col max-h-[80vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+              <h2 id="import-dialog-title" className="text-lg font-bold text-slate-800">
+                Import categories
+              </h2>
+              <button
+                type="button"
+                onClick={closeImportDialog}
+                aria-label="Close"
+                className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-6">
+              <label htmlFor="import-textarea" className="block text-sm font-medium text-slate-600 mb-2">
+                Paste exported JSON below
+              </label>
+              <textarea
+                id="import-textarea"
+                defaultValue=""
+                ref={importTextRef}
+                onChange={() => importError && setImportError(null)}
+                aria-invalid={importError ? true : undefined}
+                aria-describedby={importError ? "import-error" : undefined}
+                className={`w-full h-64 rounded-md border bg-slate-50 p-3 font-mono text-xs text-slate-700 shadow-inner outline-none focus:ring-2 resize-y ${importError ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-200'}`}
+              />
+              {importError && (
+                <p id="import-error" role="alert" className="mt-2 text-sm font-medium text-red-600">
+                  {importError}
+                </p>
+              )}
+            </div>
+            <div className="flex justify-end gap-2 border-t border-slate-200 px-6 py-4">
+              <button
+                type="button"
+                onClick={closeImportDialog}
+                className="rounded-md border border-slate-300 bg-white px-4 py-1.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleImport}
+                className="rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
+              >
+                Import
               </button>
             </div>
           </div>

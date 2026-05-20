@@ -8,7 +8,7 @@ function validateWordUniqueness(categories: EditorCategory[], word: string): Edi
   const wordNormalized = word.toLowerCase();
 
   const categoryWithDup = categories.find(
-    (category) => category.entries.some(e => e.title.toLowerCase() === wordNormalized )
+    (category) => category.entries.some(e => e.title.toLowerCase() === wordNormalized)
   )
 
   if (categoryWithDup) return categoryWithDup;
@@ -40,26 +40,26 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
     case 'addEntry':
       {
         const categoryWithDup = validateWordUniqueness(categories, action.title);
-      if (categoryWithDup) return {
-        ...state,
-        addWordError: {
-          categoryId: action.categoryId,
-          message: `The word "${action.title}" already exists in category "${categoryWithDup.title}"`
-        }
-      };
-      else return {
-        ...state,
-        addWordError: null,
-        categories: categories.map(category =>
-          category.id === action.categoryId ?
-            {
-              ...category,
-              entries: [...category.entries, { id: action.entryId, title: action.title }]
-            } :
-            category
-        )
-      };
-    }
+        if (categoryWithDup) return {
+          ...state,
+          addWordError: {
+            categoryId: action.categoryId,
+            message: `The word "${action.title}" already exists in category "${categoryWithDup.title}"`
+          }
+        };
+        else return {
+          ...state,
+          addWordError: null,
+          categories: categories.map(category =>
+            category.id === action.categoryId ?
+              {
+                ...category,
+                entries: [...category.entries, { id: action.entryId, title: action.title }]
+              } :
+              category
+          )
+        };
+      }
     case 'updateEntry':
       return {
         ...state, categories: categories.map(category =>
@@ -86,6 +86,13 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
       };
     case 'clearErrors':
       return { ...state, addCategoryError: null, addWordError: null }
+    case 'replaceCategories':
+      return {
+        categories: action.data,
+        newlyAddedCategoryId: null,
+        addCategoryError: null,
+        addWordError: null
+      }
   }
 }
 
