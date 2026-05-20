@@ -34,7 +34,7 @@ export function EntryForm({ category, entry }: {
   }
 
   return (
-    <li className="inline-flex items-center gap-1 rounded-md bg-indigo-50 pl-3 pr-1 py-1 text-sm font-medium text-indigo-800">
+    <li className="inline-flex items-center gap-1 rounded-md bg-indigo-50 pl-3 pr-1 py-1 text-sm font-medium text-indigo-800 [counter-increment:entry] before:content-[counter(entry)_'.'] before:text-slate-400 before:text-xs before:tabular-nums before:mr-1">
       {
         isEditing ?
           <>

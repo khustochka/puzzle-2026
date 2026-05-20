@@ -130,7 +130,7 @@ export function CategoryForm({ category, ref }: {
           {status}
         </div>
 
-        <ol className="mt-6 flex flex-wrap gap-2 list-none p-0">
+        <ol className="mt-6 flex flex-wrap gap-2 list-none p-0 [counter-reset:entry]">
           {
             category.entries.map((entry) => (
               <EntryForm key={entry.id} entry={entry} category={category} />
