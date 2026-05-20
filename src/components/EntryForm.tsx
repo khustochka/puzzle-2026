@@ -34,7 +34,7 @@ export function EntryForm({ category, entry }: {
   }
 
   return (
-    <li className="inline-flex items-center gap-1 rounded-md bg-indigo-50 pl-3 pr-1 py-1 text-sm font-medium text-indigo-800 [counter-increment:entry] before:content-[counter(entry)_'.'] before:text-slate-400 before:text-xs before:tabular-nums before:mr-1">
+    <li className="inline-flex items-center gap-1 max-w-full rounded-md bg-indigo-50 pl-2 pr-1 py-1 text-sm font-medium text-indigo-800 [counter-increment:entry] before:content-[counter(entry)_'.'] before:text-slate-400 before:text-xs before:tabular-nums before:mr-0.5 before:shrink-0">
       {
         isEditing ?
           <>
@@ -42,8 +42,9 @@ export function EntryForm({ category, entry }: {
               defaultValue={entry.title}
               ref={entryInputRef}
               onKeyDown={handleEntryKeyDown}
+              enterKeyHint="done"
               size={20}
-              className="bg-white rounded-md border border-indigo-300 shadow-sm px-2 py-0.5 text-sm font-medium text-indigo-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+              className="min-w-0 max-w-48 bg-white rounded-md border border-indigo-300 shadow-sm px-2 py-0.5 text-sm font-medium text-indigo-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
             />
             <button
               type="button"

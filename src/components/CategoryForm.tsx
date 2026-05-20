@@ -63,18 +63,26 @@ export function CategoryForm({ category, ref }: {
       ${category.entries.map((entry) => entry.title).join(", ")}`)
   }
 
+  const newWordRef = useRef<HTMLInputElement>(null);
+
   const handleAddWord = (title: string) => {
     const id = crypto.randomUUID();
     dispatch({ type: 'addEntry', categoryId: category.id, entryId: id, title: title });
   }
 
+  const submitNewWord = () => {
+    dispatch({ type: 'clearErrors' });
+    const value = newWordRef.current?.value.trim();
+    if (!value) return;
+    handleAddWord(value);
+    if (newWordRef.current) newWordRef.current.value = '';
+    newWordRef.current?.focus();
+  };
+
   const handleNewWordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      dispatch({ type: 'clearErrors' });
-      const value = e.currentTarget.value.trim();
-      if (!value) return;
-      handleAddWord(value);
-      e.currentTarget.value = '';
+      e.preventDefault();
+      submitNewWord();
     }
     if (e.key === 'Escape') {
       dispatch({ type: 'clearErrors' });
@@ -83,8 +91,8 @@ export function CategoryForm({ category, ref }: {
   };
 
   return (
-    <li id={`category-${category.id}`} className="pl-2" ref={ref}>
-      <div className="relative rounded-2xl border border-slate-200 bg-white p-6 pr-16 shadow-md">
+    <li id={`category-${category.id}`} className="pl-1 sm:pl-2" ref={ref}>
+      <div className="relative rounded-2xl border border-slate-200 bg-white p-3 pr-12 sm:p-6 sm:pr-16 shadow-md">
         <button
           type="button"
           onClick={handleDeleteCategory}
@@ -100,6 +108,7 @@ export function CategoryForm({ category, ref }: {
                 defaultValue={category.title}
                 onKeyDown={(e) => handleTitleKeyDown(e)}
                 ref={titleInputRef}
+                enterKeyHint="done"
                 className="flex-1 min-w-0 text-2xl font-bold leading-tight text-slate-800 bg-white rounded-md border border-slate-300 shadow-sm px-2 py-1 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />
               <button
@@ -139,17 +148,28 @@ export function CategoryForm({ category, ref }: {
         </ol>
 
         <div className="mt-6 border-t-2 border-dashed border-slate-300 pt-5">
-          <div className="w-1/2 flex items-start gap-2">
+          <div className="w-full sm:w-1/2 flex items-start gap-2">
             <label htmlFor={`newWord-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap pt-1.5">
               Add entry:
             </label>
-            <div className="flex-1 flex flex-col gap-1">
-              <input
-                id={`newWord-${category.id}`}
-                defaultValue=""
-                onKeyDown={handleNewWordKeyDown}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-              />
+            <div className="flex-1 min-w-0 flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <input
+                  id={`newWord-${category.id}`}
+                  ref={newWordRef}
+                  defaultValue=""
+                  onKeyDown={handleNewWordKeyDown}
+                  enterKeyHint="done"
+                  className="flex-1 min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                />
+                <button
+                  type="button"
+                  onClick={submitNewWord}
+                  className="rounded-md bg-indigo-200 px-3 py-1.5 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer"
+                >
+                  Add
+                </button>
+              </div>
               {addWordError && addWordError.categoryId == category.id && (
                 <p
                   id="newCategory-error"
