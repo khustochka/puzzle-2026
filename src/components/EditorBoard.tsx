@@ -42,6 +42,13 @@ export function EditorBoard() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [importDialogOpen]);
 
+  useEffect(() => {
+    if (!exportDialogOpen && !importDialogOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [exportDialogOpen, importDialogOpen]);
+
   const handleImport = () => {
     const importJson = importTextRef.current?.value.trim();
     if (importJson) {
