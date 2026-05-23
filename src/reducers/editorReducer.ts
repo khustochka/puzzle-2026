@@ -1,16 +1,5 @@
-import type { EditorState, EditorCategory, EditorAction } from "../types/editorTypes";
-
-function findCategoryWithEntry(categories: EditorCategory[], entry: string): EditorCategory | null {
-  const entryNormalized = entry.toLowerCase();
-  return categories.find(
-    (category) => category.entries.some(e => e.value.toLowerCase() === entryNormalized)
-  ) ?? null;
-}
-
-function isCategoryNameTaken(categories: EditorCategory[], name: string): boolean {
-  const nameNormalized = name.toLowerCase();
-  return categories.some(c => c.name.toLowerCase() === nameNormalized);
-}
+import type { EditorState, EditorAction } from "../types/editorTypes";
+import { findCategoryWithEntry, isCategoryNameTaken } from "./validators";
 
 function addCategory(state: EditorState, action: Extract<EditorAction, { type: 'addCategory' }>): EditorState {
   const { categories } = state;
