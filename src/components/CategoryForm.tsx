@@ -3,17 +3,23 @@ import { useEditor } from "../hooks/useEditor";
 import type { EditorCategory } from "../types/editorTypes";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { EntryForm } from "./EntryForm";
+import { isCategoryNameTaken } from "../reducers/validators";
 
 export function CategoryForm({ category, ref }: {
   category: EditorCategory;
   ref: React.Ref<HTMLLIElement>
 }) {
 
-  const { state: { addEntryError }, dispatch } = useEditor();
+  const { state: { categories, addEntryError }, dispatch } = useEditor();
   const [isEditing, setIsEditing] = useState(false);
 
   const [enteredCategoryName, setEnteredCategoryName] = useState(category.name)
-  const changedCategoryName = enteredCategoryName.trim()
+  const changedCategoryName = enteredCategoryName.trim();
+
+  const nameUpdateError = changedCategoryName &&
+    isCategoryNameTaken(categories, changedCategoryName, category.id) ?
+    "Category with this name already exists." :
+    null
 
   const totalEntries = category.entries.length;
 
@@ -43,14 +49,18 @@ export function CategoryForm({ category, ref }: {
   }
 
   const handleNameUpdate = () => {
-    if (changedCategoryName)
+    if (isEditing && changedCategoryName && !nameUpdateError) {
       dispatch({ type: 'updateCategoryName', id: category.id, name: changedCategoryName });
-    setIsEditing(false)
+      setIsEditing(false);
+    }
   }
 
   const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleNameUpdate();
-    if (e.key === 'Escape') setIsEditing(false)
+    if (e.key === 'Escape') {
+      setIsEditing(false);
+      setEnteredCategoryName(category.name);
+    }
   }
 
   const handleDeleteCategory = () => {
@@ -99,22 +109,38 @@ export function CategoryForm({ category, ref }: {
         </button>
         {
           isEditing ?
-            <div className="flex items-center gap-2">
-              <input
-                value={enteredCategoryName}
-                onChange={(e) => setEnteredCategoryName(e.currentTarget.value)}
-                onKeyDown={(e) => handleNameKeyDown(e)}
-                autoFocus
-                enterKeyHint="done"
-                className="flex-1 min-w-0 text-2xl font-bold leading-tight text-slate-800 bg-white rounded-md border border-slate-300 shadow-sm px-2 py-1 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-              />
-              <button
-                type="button"
-                onClick={handleNameUpdate}
-                className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
-              >
-                Save
-              </button>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <input
+                  value={enteredCategoryName}
+                  onChange={(e) => setEnteredCategoryName(e.currentTarget.value)}
+                  onKeyDown={handleNameKeyDown}
+                  autoFocus
+                  enterKeyHint="done"
+                  aria-invalid={nameUpdateError ? true : undefined}
+                  aria-describedby={nameUpdateError ? `category-${category.id}-name-error` : undefined}
+                  className={`flex-1 min-w-0 text-2xl font-bold leading-tight text-slate-800 bg-white rounded-md border shadow-sm px-2 py-1 outline-none ${nameUpdateError
+                    ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                    : "border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                    }`}
+                />
+                <button
+                  type="button"
+                  onClick={handleNameUpdate}
+                  className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
+                >
+                  Save
+                </button>
+              </div>
+              {nameUpdateError && (
+                <p
+                  id={`category-${category.id}-name-error`}
+                  role="alert"
+                  className="text-sm font-medium text-red-600"
+                >
+                  {nameUpdateError}
+                </p>
+              )}
             </div> :
             <h2
               onClick={() => setIsEditing(true)}

@@ -4,6 +4,7 @@ import { findCategoryWithEntry, isCategoryNameTaken } from "./validators";
 function addCategory(state: EditorState, action: Extract<EditorAction, { type: 'addCategory' }>): EditorState {
   const { categories } = state;
   const name = action.name.trim();
+
   if (isCategoryNameTaken(categories, name)) {
     return {
       ...state,
@@ -13,12 +14,19 @@ function addCategory(state: EditorState, action: Extract<EditorAction, { type: '
   return {
     ...state,
     newlyAddedCategoryId: action.id,
-    categories: [...categories, { id: action.id, name: action.name, entries: [] }]
+    categories: [...categories, { id: action.id, name: name, entries: [] }]
   };
 }
 
 function updateCategoryName(state: EditorState, action: Extract<EditorAction, { type: 'updateCategoryName' }>): EditorState {
+  const { categories } = state;
   const name = action.name.trim();
+
+  if (isCategoryNameTaken(categories, name, action.id)) {
+    return {
+      ...state,
+    };
+  }
   return {
     ...state,
     categories: state.categories.map(c => c.id === action.id ? { ...c, name } : c)
@@ -63,11 +71,11 @@ function updateEntry(state: EditorState, action: Extract<EditorAction, { type: '
     categories: state.categories.map(category =>
       category.id === action.categoryId
         ? {
-            ...category,
-            entries: category.entries.map(entry =>
-              entry.id === action.entryId ? { ...entry, value } : entry
-            )
-          }
+          ...category,
+          entries: category.entries.map(entry =>
+            entry.id === action.entryId ? { ...entry, value } : entry
+          )
+        }
         : category
     )
   };
