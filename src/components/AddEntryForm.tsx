@@ -1,34 +1,37 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { useEditor } from "../hooks/useEditor";
+import { findCategoryWithEntry } from "../reducers/validators";
 
 export function AddEntryForm({ categoryId }: { categoryId: string }) {
 
-  const { state: { addEntryError }, dispatch } = useEditor();
+  const { state: { categories }, dispatch } = useEditor();
+  const [enteredEntryValue, setEnteredEntryValue] = useState('');
 
-  const newEntryRef = useRef<HTMLInputElement>(null);
+  const entryValue = enteredEntryValue.trim();
 
-  const handleAddEntry = (value: string) => {
+  // Do not run validation for empty input
+  const categoryWithDup = entryValue && findCategoryWithEntry(categories, entryValue);
+
+  const error = categoryWithDup ?
+    `The entry "${entryValue}" already exists in category "${categoryWithDup.name}"` :
+    null
+
+  const handleAddEntry = () => {
+    if (!entryValue || error) return;
+
     const id = crypto.randomUUID();
-    dispatch({ type: 'addEntry', categoryId: categoryId, entryId: id, value: value });
-  }
+    dispatch({ type: 'addEntry', categoryId: categoryId, entryId: id, value: entryValue });
 
-  const submitNewEntry = () => {
-    dispatch({ type: 'clearErrors' });
-    const value = newEntryRef.current?.value.trim();
-    if (!value) return;
-    handleAddEntry(value);
-    if (newEntryRef.current) newEntryRef.current.value = '';
-    newEntryRef.current?.focus();
+    setEnteredEntryValue('');
   };
 
   const handleNewEntryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      submitNewEntry();
+      handleAddEntry();
     }
     if (e.key === 'Escape') {
-      dispatch({ type: 'clearErrors' });
-      e.currentTarget.value = '';
+      setEnteredEntryValue('');
     }
   };
 
@@ -42,27 +45,29 @@ export function AddEntryForm({ categoryId }: { categoryId: string }) {
           <div className="flex items-center gap-2">
             <input
               id={`newEntry-${categoryId}`}
-              ref={newEntryRef}
-              defaultValue=""
+              value={enteredEntryValue}
+              onChange={(e) => setEnteredEntryValue(e.currentTarget.value)}
               onKeyDown={handleNewEntryKeyDown}
               enterKeyHint="done"
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? `newEntry-${categoryId}-error` : undefined}
               className="flex-1 min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
             />
             <button
               type="button"
-              onClick={submitNewEntry}
+              onClick={handleAddEntry}
               className="rounded-md bg-indigo-200 px-3 py-1.5 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer"
             >
               Add
             </button>
           </div>
-          {addEntryError && addEntryError.categoryId == categoryId && (
+          {error && (
             <p
-              id="newCategory-error"
+              id={`newEntry-${categoryId}-error`}
               role="alert"
               className="text-sm font-medium text-red-600"
             >
-              {addEntryError.message}
+              {error}
             </p>
           )}
         </div>

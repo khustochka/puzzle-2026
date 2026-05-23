@@ -45,17 +45,10 @@ function addEntry(state: EditorState, action: Extract<EditorAction, { type: 'add
   const value = action.value.trim();
   const categoryWithDup = findCategoryWithEntry(categories, value);
   if (categoryWithDup) {
-    return {
-      ...state,
-      addEntryError: {
-        categoryId: action.categoryId,
-        message: `The entry "${value}" already exists in category "${categoryWithDup.name}"`
-      }
-    };
+    return state;
   }
   return {
     ...state,
-    addEntryError: null,
     categories: categories.map(category =>
       category.id === action.categoryId
         ? { ...category, entries: [...category.entries, { id: action.entryId, value }] }
@@ -92,15 +85,10 @@ function deleteEntry(state: EditorState, action: Extract<EditorAction, { type: '
   };
 }
 
-function clearErrors(state: EditorState): EditorState {
-  return { ...state, addEntryError: null };
-}
-
 function replaceCategories(_state: EditorState, action: Extract<EditorAction, { type: 'replaceCategories' }>): EditorState {
   return {
     categories: action.data,
     newlyAddedCategoryId: null,
-    addEntryError: null
   };
 }
 
@@ -112,7 +100,6 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
     case 'addEntry': return addEntry(state, action);
     case 'updateEntry': return updateEntry(state, action);
     case 'deleteEntry': return deleteEntry(state, action);
-    case 'clearErrors': return clearErrors(state);
     case 'replaceCategories': return replaceCategories(state, action);
   }
 }

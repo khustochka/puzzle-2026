@@ -34,7 +34,6 @@ export function EditorProvider({ children, initialCategories }: { children: Reac
   const initialState = {
     categories: savedCategories,
     newlyAddedCategoryId: null,
-    addEntryError: null
   }
   const [state, dispatch] = useReducer(editorReducer, initialState);
 
