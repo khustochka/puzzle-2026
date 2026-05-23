@@ -3,7 +3,8 @@ import { findCategoryWithEntry, isCategoryNameTaken } from "./validators";
 
 function addCategory(state: EditorState, action: Extract<EditorAction, { type: 'addCategory' }>): EditorState {
   const { categories } = state;
-  if (isCategoryNameTaken(categories, action.name)) {
+  const name = action.name.trim();
+  if (isCategoryNameTaken(categories, name)) {
     return {
       ...state,
       newlyAddedCategoryId: null,
@@ -19,9 +20,10 @@ function addCategory(state: EditorState, action: Extract<EditorAction, { type: '
 }
 
 function updateCategoryName(state: EditorState, action: Extract<EditorAction, { type: 'updateCategoryName' }>): EditorState {
+  const name = action.name.trim();
   return {
     ...state,
-    categories: state.categories.map(c => c.id === action.id ? { ...c, name: action.name } : c)
+    categories: state.categories.map(c => c.id === action.id ? { ...c, name } : c)
   };
 }
 
@@ -34,13 +36,14 @@ function deleteCategory(state: EditorState, action: Extract<EditorAction, { type
 
 function addEntry(state: EditorState, action: Extract<EditorAction, { type: 'addEntry' }>): EditorState {
   const { categories } = state;
-  const categoryWithDup = findCategoryWithEntry(categories, action.value);
+  const value = action.value.trim();
+  const categoryWithDup = findCategoryWithEntry(categories, value);
   if (categoryWithDup) {
     return {
       ...state,
       addEntryError: {
         categoryId: action.categoryId,
-        message: `The entry "${action.value}" already exists in category "${categoryWithDup.name}"`
+        message: `The entry "${value}" already exists in category "${categoryWithDup.name}"`
       }
     };
   }
@@ -49,13 +52,14 @@ function addEntry(state: EditorState, action: Extract<EditorAction, { type: 'add
     addEntryError: null,
     categories: categories.map(category =>
       category.id === action.categoryId
-        ? { ...category, entries: [...category.entries, { id: action.entryId, value: action.value }] }
+        ? { ...category, entries: [...category.entries, { id: action.entryId, value }] }
         : category
     )
   };
 }
 
 function updateEntry(state: EditorState, action: Extract<EditorAction, { type: 'updateEntry' }>): EditorState {
+  const value = action.value.trim();
   return {
     ...state,
     categories: state.categories.map(category =>
@@ -63,7 +67,7 @@ function updateEntry(state: EditorState, action: Extract<EditorAction, { type: '
         ? {
             ...category,
             entries: category.entries.map(entry =>
-              entry.id === action.entryId ? { ...entry, value: action.value } : entry
+              entry.id === action.entryId ? { ...entry, value } : entry
             )
           }
         : category
@@ -83,7 +87,7 @@ function deleteEntry(state: EditorState, action: Extract<EditorAction, { type: '
 }
 
 function clearErrors(state: EditorState): EditorState {
-  return { ...state, addCategoryError: null, addEntryError: null };
+  return { ...state, addEntryError: null };
 }
 
 function replaceCategories(_state: EditorState, action: Extract<EditorAction, { type: 'replaceCategories' }>): EditorState {
