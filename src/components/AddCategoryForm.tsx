@@ -1,37 +1,35 @@
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 import { useEditor } from "../hooks/useEditor";
+import { isCategoryNameTaken } from "../reducers/validators";
 
 export function AddCategoryForm() {
 
-  const { state: { addCategoryError, newlyAddedCategoryId }, dispatch } = useEditor();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const { state: { categories }, dispatch } = useEditor();
+  const [enteredCategoryName, setEnteredCategoryName] = useState('');
+  const categoryName = enteredCategoryName.trim();
 
-  useEffect(() => {
-    if (newlyAddedCategoryId && inputRef.current)
-      inputRef.current.value = '';
-  },
-    [newlyAddedCategoryId])
+  const error = categoryName && isCategoryNameTaken(categories, categoryName) ?
+    "Category with this name already exists." :
+    null
 
-  const handleAddCategory = (name: string) => {
-    const id = crypto.randomUUID();
-    dispatch({ type: 'addCategory', id: id, name: name });
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEnteredCategoryName(e.currentTarget.value);
   }
 
-  const submitNewCategory = () => {
-    dispatch({ type: 'clearErrors' });
-    const value = inputRef.current?.value.trim();
-    if (!value) return;
-    handleAddCategory(value);
+  const handleAddCategory = () => {
+    if (!categoryName || error) return;
+    const id = crypto.randomUUID();
+    dispatch({ type: 'addCategory', id: id, name: categoryName });
+    setEnteredCategoryName('')
   };
 
   const handleNewCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      submitNewCategory();
+      handleAddCategory();
     }
     if (e.key === 'Escape') {
-      dispatch({ type: 'clearErrors' })
-      e.currentTarget.value = '';
+      setEnteredCategoryName('');
     }
   };
 
@@ -42,32 +40,31 @@ export function AddCategoryForm() {
       </label>
       <input
         id='newCategory'
-        ref={inputRef}
-        defaultValue=""
+        value={enteredCategoryName}
         onKeyDown={handleNewCategoryKeyDown}
-        onChange={() => dispatch({ type: 'clearErrors' })}
+        onChange={handleInput}
         enterKeyHint="done"
-        aria-invalid={addCategoryError ? true : undefined}
-        aria-describedby={addCategoryError ? "newCategory-error" : undefined}
-        className={`min-w-0 rounded-md border bg-white px-3 py-2 text-sm shadow-sm outline-none ${addCategoryError
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? "newCategory-error" : undefined}
+        className={`min-w-0 rounded-md border bg-white px-3 py-2 text-sm shadow-sm outline-none ${error
           ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200"
           : "border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
           }`}
       />
       <button
         type="button"
-        onClick={submitNewCategory}
+        onClick={handleAddCategory}
         className="rounded-md bg-indigo-200 px-3 py-2 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer"
       >
         Add
       </button>
-      {addCategoryError && (
+      {error && (
         <p
           id="newCategory-error"
           role="alert"
           className="col-start-2 text-sm font-medium text-red-600"
         >
-          {addCategoryError}
+          {error}
         </p>
       )}
     </div>

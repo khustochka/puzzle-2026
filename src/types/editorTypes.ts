@@ -12,7 +12,6 @@ export type EditorCategory = {
 export type EditorState = {
   categories: EditorCategory[];
   newlyAddedCategoryId: string | null;
-  addCategoryError: string | null;
   addEntryError: { categoryId: string, message: string } | null;
 };
 

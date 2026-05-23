@@ -8,13 +8,11 @@ function addCategory(state: EditorState, action: Extract<EditorAction, { type: '
     return {
       ...state,
       newlyAddedCategoryId: null,
-      addCategoryError: "Category with this name already exists."
     };
   }
   return {
     ...state,
     newlyAddedCategoryId: action.id,
-    addCategoryError: null,
     categories: [...categories, { id: action.id, name: action.name, entries: [] }]
   };
 }
@@ -94,7 +92,6 @@ function replaceCategories(_state: EditorState, action: Extract<EditorAction, { 
   return {
     categories: action.data,
     newlyAddedCategoryId: null,
-    addCategoryError: null,
     addEntryError: null
   };
 }
