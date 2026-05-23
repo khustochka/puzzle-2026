@@ -5,12 +5,11 @@ function addCategory(state: EditorState, action: Extract<EditorAction, { type: '
   const { categories } = state;
   const name = action.name.trim();
 
-  if (isCategoryNameTaken(categories, name)) {
+  if (isCategoryNameTaken(categories, name))
     return {
       ...state,
       newlyAddedCategoryId: null,
     };
-  }
   return {
     ...state,
     newlyAddedCategoryId: action.id,
@@ -22,11 +21,7 @@ function updateCategoryName(state: EditorState, action: Extract<EditorAction, { 
   const { categories } = state;
   const name = action.name.trim();
 
-  if (isCategoryNameTaken(categories, name, action.id)) {
-    return {
-      ...state,
-    };
-  }
+  if (isCategoryNameTaken(categories, name, action.id)) return state;
   return {
     ...state,
     categories: state.categories.map(c => c.id === action.id ? { ...c, name } : c)
@@ -58,7 +53,11 @@ function addEntry(state: EditorState, action: Extract<EditorAction, { type: 'add
 }
 
 function updateEntry(state: EditorState, action: Extract<EditorAction, { type: 'updateEntry' }>): EditorState {
+  const { categories } = state;
   const value = action.value.trim();
+  const categoryWithDup = findCategoryWithEntry(categories, value, action.entryId);
+
+  if (categoryWithDup) return state;
   return {
     ...state,
     categories: state.categories.map(category =>

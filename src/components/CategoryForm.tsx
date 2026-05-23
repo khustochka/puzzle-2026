@@ -17,7 +17,9 @@ export function CategoryForm({ category, ref }: {
   const [enteredCategoryName, setEnteredCategoryName] = useState(category.name)
   const changedCategoryName = enteredCategoryName.trim();
 
-  const nameUpdateError = changedCategoryName &&
+  const nameUpdateError =
+    isEditing &&
+    changedCategoryName &&
     isCategoryNameTaken(categories, changedCategoryName, category.id) ?
     "Category with this name already exists." :
     null
@@ -101,6 +103,7 @@ export function CategoryForm({ category, ref }: {
                 <button
                   type="button"
                   onClick={handleNameUpdate}
+                  disabled={!changedCategoryName || !!nameUpdateError}
                   className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
                 >
                   Save

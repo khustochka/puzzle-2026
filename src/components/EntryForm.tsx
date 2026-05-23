@@ -1,31 +1,40 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useEditor } from "../hooks/useEditor";
 import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { findCategoryWithEntry } from "../reducers/validators";
 
 export function EntryForm({ category, entry }: {
   category: EditorCategory;
   entry: EditorEntry
 }) {
 
-  const entryInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const { dispatch } = useEditor()
+  const { state: { categories }, dispatch } = useEditor()
 
-  useEffect(() => {
-    if (isEditing) entryInputRef.current?.focus()
-  },
-    [isEditing]
-  )
+  const [enteredEntryValue, setEnteredEntryValue] = useState(entry.value)
+  const changedEntryValue = enteredEntryValue.trim();
+
+  const categoryWithDup = isEditing &&
+    changedEntryValue &&
+    findCategoryWithEntry(categories, changedEntryValue, entry.id)
+
+  const error = categoryWithDup ?
+    `The entry "${changedEntryValue}" already exists in category "${categoryWithDup.name}"` :
+    null
+
   const handleEntryUpdate = () => {
-    if (entryInputRef.current)
-      dispatch({ type: 'updateEntry', categoryId: category.id, entryId: entry.id, value: entryInputRef.current?.value?.trim() });
+    if (!changedEntryValue || error) return;
+    dispatch({ type: 'updateEntry', categoryId: category.id, entryId: entry.id, value: changedEntryValue });
     setIsEditing(false)
   }
 
   const handleEntryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleEntryUpdate();
-    if (e.key === 'Escape') setIsEditing(false)
+    if (e.key === 'Escape') {
+      setIsEditing(false);
+      setEnteredEntryValue(entry.value);
+    }
   }
 
   const handleDeleteEntry = () => {
@@ -34,25 +43,41 @@ export function EntryForm({ category, entry }: {
   }
 
   return (
-    <li className="inline-flex items-center gap-1 max-w-full rounded-md bg-indigo-50 pl-2 pr-1 py-1 text-sm font-medium text-indigo-800 [counter-increment:entry] before:content-[counter(entry)_'.'] before:text-slate-400 before:text-xs before:tabular-nums before:mr-0.5 before:shrink-0">
+    <li className="inline-flex flex-wrap items-center gap-1 max-w-full rounded-md bg-indigo-50 pl-2 pr-1 py-1 text-sm font-medium text-indigo-800 [counter-increment:entry] before:content-[counter(entry)_'.'] before:text-slate-400 before:text-xs before:tabular-nums before:mr-0.5 before:shrink-0">
       {
         isEditing ?
           <>
             <input
-              defaultValue={entry.value}
-              ref={entryInputRef}
+              value={enteredEntryValue}
+              onChange={(e) => setEnteredEntryValue(e.currentTarget.value)}
               onKeyDown={handleEntryKeyDown}
+              autoFocus
               enterKeyHint="done"
               size={20}
-              className="min-w-0 max-w-48 bg-white rounded-md border border-indigo-300 shadow-sm px-2 py-0.5 text-sm font-medium text-indigo-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? `entry-${entry.id}-error` : undefined}
+              className={`min-w-0 max-w-48 bg-white rounded-md border shadow-sm px-2 py-0.5 text-sm font-medium text-indigo-900 outline-none ${error
+                ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                : "border-indigo-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                }`}
             />
             <button
               type="button"
               onClick={handleEntryUpdate}
-              className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
+              disabled={!changedEntryValue || !!error}
+              className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Save
             </button>
+            {error && (
+              <p
+                id={`entry-${entry.id}-error`}
+                role="alert"
+                className="basis-full text-xs font-medium text-red-600"
+              >
+                {error}
+              </p>
+            )}
           </> :
           <>
             <span
