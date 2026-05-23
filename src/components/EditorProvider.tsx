@@ -1,8 +1,9 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import { EditorContext } from "../contexts/EditorContext";
 import type { EditorCategory } from "../types/editorTypes";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { editorReducer } from "../reducers/editorReducer";
+import { buildEntryLookup } from "../reducers/validators";
 
 type LegacyEntry = { id: string; title: string };
 type LegacyCategory = { id: string; title: string; entries: LegacyEntry[] };
@@ -37,13 +38,18 @@ export function EditorProvider({ children, initialCategories }: { children: Reac
   }
   const [state, dispatch] = useReducer(editorReducer, initialState);
 
+  const entryLookup = useMemo(
+    () => buildEntryLookup(state.categories),
+    [state.categories]
+  )
+
   useEffect(
     () => setSavedCategories(state.categories),
     [state.categories, setSavedCategories]
   )
 
   return (
-    <EditorContext.Provider value={{ state, dispatch }}>
+    <EditorContext.Provider value={{ state, dispatch, entryLookup }}>
       {children}
     </EditorContext.Provider>
   );

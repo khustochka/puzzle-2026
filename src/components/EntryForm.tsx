@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useEditor } from "../hooks/useEditor";
 import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { findCategoryWithEntry } from "../reducers/validators";
+import { lookupCategoryWithEntry } from "../reducers/validators";
 
 export function EntryForm({ category, entry }: {
   category: EditorCategory;
@@ -10,14 +10,14 @@ export function EntryForm({ category, entry }: {
 }) {
 
   const [isEditing, setIsEditing] = useState(false);
-  const { state: { categories }, dispatch } = useEditor()
+  const { entryLookup, dispatch } = useEditor()
 
   const [enteredEntryValue, setEnteredEntryValue] = useState(entry.value)
   const changedEntryValue = enteredEntryValue.trim();
 
   const categoryWithDup = isEditing &&
     changedEntryValue &&
-    findCategoryWithEntry(categories, changedEntryValue, entry.id)
+    lookupCategoryWithEntry(entryLookup, changedEntryValue, entry.id)
 
   const error = categoryWithDup ?
     `The entry "${changedEntryValue}" already exists in category "${categoryWithDup.name}"` :

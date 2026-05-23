@@ -14,6 +14,9 @@ export type EditorState = {
   newlyAddedCategoryId: string | null;
 };
 
+export type EntryLookupValue = { entryId: string; category: EditorCategory }
+export type EntryLookupMap = Map<string, EntryLookupValue>
+
 export type EditorAction =
   | { type: 'addCategory'; id: string; name: string }
   | { type: 'updateCategoryName'; id: string; name: string }

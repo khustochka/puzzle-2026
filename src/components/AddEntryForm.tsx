@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useEditor } from "../hooks/useEditor";
-import { findCategoryWithEntry } from "../reducers/validators";
+import { lookupCategoryWithEntry } from "../reducers/validators";
 
 export function AddEntryForm({ categoryId }: { categoryId: string }) {
 
-  const { state: { categories }, dispatch } = useEditor();
+  const { entryLookup, dispatch } = useEditor();
   const [enteredEntryValue, setEnteredEntryValue] = useState('');
 
   const entryValue = enteredEntryValue.trim();
 
   // Do not run validation for empty input
-  const categoryWithDup = entryValue && findCategoryWithEntry(categories, entryValue);
+  const categoryWithDup = entryValue && lookupCategoryWithEntry(entryLookup, entryValue);
 
   const error = categoryWithDup ?
     `The entry "${entryValue}" already exists in category "${categoryWithDup.name}"` :
