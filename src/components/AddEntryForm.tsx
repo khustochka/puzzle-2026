@@ -49,6 +49,7 @@ export function AddEntryForm({ categoryId }: { categoryId: string }) {
               onChange={(e) => setEnteredEntryValue(e.currentTarget.value)}
               onKeyDown={handleNewEntryKeyDown}
               enterKeyHint="done"
+              maxLength={100}
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? `newEntry-${categoryId}-error` : undefined}
               className="flex-1 min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"

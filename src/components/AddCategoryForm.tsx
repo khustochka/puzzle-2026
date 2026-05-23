@@ -40,6 +40,7 @@ export function AddCategoryForm() {
         onKeyDown={handleNewCategoryKeyDown}
         onChange={(e) => setEnteredCategoryName(e.currentTarget.value)}
         enterKeyHint="done"
+        maxLength={100}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? "newCategory-error" : undefined}
         className={`min-w-0 rounded-md border bg-white px-3 py-2 text-sm shadow-sm outline-none ${error

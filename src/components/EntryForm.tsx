@@ -53,6 +53,7 @@ export function EntryForm({ category, entry }: {
               onKeyDown={handleEntryKeyDown}
               autoFocus
               enterKeyHint="done"
+              maxLength={100}
               size={20}
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? `entry-${entry.id}-error` : undefined}

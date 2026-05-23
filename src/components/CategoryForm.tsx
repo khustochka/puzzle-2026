@@ -93,6 +93,7 @@ export function CategoryForm({ category, ref }: {
                   onKeyDown={handleNameKeyDown}
                   autoFocus
                   enterKeyHint="done"
+                  maxLength={100}
                   aria-invalid={nameUpdateError ? true : undefined}
                   aria-describedby={nameUpdateError ? `category-${category.id}-name-error` : undefined}
                   className={`flex-1 min-w-0 text-2xl font-bold leading-tight text-slate-800 bg-white rounded-md border shadow-sm px-2 py-1 outline-none ${nameUpdateError
