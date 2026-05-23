@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useEditor } from "../hooks/useEditor";
 import type { EditorCategory } from "../types/editorTypes";
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -9,15 +9,11 @@ export function CategoryForm({ category, ref }: {
   ref: React.Ref<HTMLLIElement>
 }) {
 
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const [isEditing, setIsEditing] = useState(false);
   const { state: { addEntryError }, dispatch } = useEditor();
+  const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    if (isEditing) nameInputRef.current?.focus()
-  },
-    [isEditing]
-  )
+  const [enteredCategoryName, setEnteredCategoryName] = useState(category.name)
+  const changedCategoryName = enteredCategoryName.trim()
 
   const totalEntries = category.entries.length;
 
@@ -47,8 +43,8 @@ export function CategoryForm({ category, ref }: {
   }
 
   const handleNameUpdate = () => {
-    if (nameInputRef.current)
-      dispatch({ type: 'updateCategoryName', id: category.id, name: nameInputRef.current?.value?.trim() });
+    if (changedCategoryName)
+      dispatch({ type: 'updateCategoryName', id: category.id, name: changedCategoryName });
     setIsEditing(false)
   }
 
@@ -105,9 +101,10 @@ export function CategoryForm({ category, ref }: {
           isEditing ?
             <div className="flex items-center gap-2">
               <input
-                defaultValue={category.name}
+                value={enteredCategoryName}
+                onChange={(e) => setEnteredCategoryName(e.currentTarget.value)}
                 onKeyDown={(e) => handleNameKeyDown(e)}
-                ref={nameInputRef}
+                autoFocus
                 enterKeyHint="done"
                 className="flex-1 min-w-0 text-2xl font-bold leading-tight text-slate-800 bg-white rounded-md border border-slate-300 shadow-sm px-2 py-1 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />

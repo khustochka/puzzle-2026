@@ -12,10 +12,6 @@ export function AddCategoryForm() {
     "Category with this name already exists." :
     null
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEnteredCategoryName(e.currentTarget.value);
-  }
-
   const handleAddCategory = () => {
     if (!categoryName || error) return;
     const id = crypto.randomUUID();
@@ -42,7 +38,7 @@ export function AddCategoryForm() {
         id='newCategory'
         value={enteredCategoryName}
         onKeyDown={handleNewCategoryKeyDown}
-        onChange={handleInput}
+        onChange={(e) => setEnteredCategoryName(e.currentTarget.value)}
         enterKeyHint="done"
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? "newCategory-error" : undefined}
