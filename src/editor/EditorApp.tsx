@@ -1,9 +1,9 @@
-import type { EditorCategory } from './types/editorTypes'
+import type { Category } from '../shared/types'
 import { EditorBoard } from './components/EditorBoard'
 import { EditorProvider } from './components/EditorProvider'
 import { ErrorBoundary } from './components/ErrorBoundary'
 
-const initialCategories: EditorCategory[] = [
+const initialCategories: Category[] = [
   {
     "id": crypto.randomUUID(),
     "name": "Famous locomotives",

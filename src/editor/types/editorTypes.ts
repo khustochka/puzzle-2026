@@ -1,20 +1,11 @@
-export type EditorEntry = {
-  id: string
-  value: string
-}
-
-export type EditorCategory = {
-  id: string
-  name: string
-  entries: EditorEntry[]
-}
+import type { Category } from "../../shared/types";
 
 export type EditorState = {
-  categories: EditorCategory[];
+  categories: Category[];
   newlyAddedCategoryId: string | null;
 };
 
-export type EntryLookupValue = { entryId: string; category: EditorCategory }
+export type EntryLookupValue = { entryId: string; category: Category }
 export type EntryLookupMap = Map<string, EntryLookupValue>
 
 export type EditorAction =
@@ -24,4 +15,4 @@ export type EditorAction =
   | { type: 'addEntry'; categoryId: string; entryId: string; value: string }
   | { type: 'updateEntry'; categoryId: string; entryId: string; value: string }
   | { type: 'deleteEntry'; categoryId: string; entryId: string }
-  | { type: 'replaceCategories', data: EditorCategory[] };
+  | { type: 'replaceCategories', data: Category[] };
