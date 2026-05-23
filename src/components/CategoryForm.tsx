@@ -66,6 +66,13 @@ export function CategoryForm({ category, ref }: {
     }
   }
 
+  const handleStartEditingKeyDown = (e: React.KeyboardEvent<HTMLHeadingElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      setIsEditing(true);
+    }
+  }
+
   const handleDeleteCategory = () => {
     dispatch({ type: 'deleteCategory', id: category.id })
     console.log(`[Track] Deleted category "${category.name}" with entries:
@@ -121,8 +128,11 @@ export function CategoryForm({ category, ref }: {
               )}
             </div> :
             <h2
+              tabIndex={0}
               onClick={() => setIsEditing(true)}
-              className="max-w-full text-2xl font-bold leading-tight text-slate-800 px-1 py-1 -mx-1 rounded cursor-text border-b-2 border-transparent hover:bg-yellow-100 transition"
+              onKeyDown={handleStartEditingKeyDown}
+              aria-label={`Edit category name: ${category.name}`}
+              className="max-w-full text-2xl font-bold leading-tight text-slate-800 px-1 py-1 -mx-1 rounded cursor-text border-b-2 border-transparent hover:bg-yellow-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition"
             >
               {category.name}
             </h2>

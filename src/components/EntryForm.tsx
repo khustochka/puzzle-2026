@@ -37,6 +37,13 @@ export function EntryForm({ category, entry }: {
     }
   }
 
+  const handleStartEditingKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      setIsEditing(true);
+    }
+  }
+
   const handleDeleteEntry = () => {
     dispatch({ type: 'deleteEntry', categoryId: category.id, entryId: entry.id })
     console.log(`[Track] Deleted entry "${entry.value}" from category "${category.name}"`)
@@ -82,8 +89,11 @@ export function EntryForm({ category, entry }: {
           </> :
           <>
             <span
+              tabIndex={0}
               onClick={() => setIsEditing(true)}
-              className="cursor-text rounded px-0.5 py-0.5 -mx-1 hover:bg-yellow-100 transition"
+              onKeyDown={handleStartEditingKeyDown}
+              aria-label={`Edit entry: ${entry.value}`}
+              className="cursor-text rounded px-0.5 py-0.5 -mx-1 hover:bg-yellow-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition"
             >
               {entry.value}
             </span>
