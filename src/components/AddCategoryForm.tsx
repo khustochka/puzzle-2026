@@ -50,7 +50,8 @@ export function AddCategoryForm() {
       <button
         type="button"
         onClick={handleAddCategory}
-        className="rounded-md bg-indigo-200 px-3 py-2 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer"
+        disabled={!categoryName || !!error}
+        className="rounded-md bg-indigo-200 px-3 py-2 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Add
       </button>

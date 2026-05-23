@@ -56,7 +56,8 @@ export function AddEntryForm({ categoryId }: { categoryId: string }) {
             <button
               type="button"
               onClick={handleAddEntry}
-              className="rounded-md bg-indigo-200 px-3 py-1.5 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer"
+              disabled={!entryValue || !!error}
+              className="rounded-md bg-indigo-200 px-3 py-1.5 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Add
             </button>

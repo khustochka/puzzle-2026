@@ -104,7 +104,7 @@ export function CategoryForm({ category, ref }: {
                   type="button"
                   onClick={handleNameUpdate}
                   disabled={!changedCategoryName || !!nameUpdateError}
-                  className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
+                  className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Save
                 </button>
