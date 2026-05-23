@@ -5,7 +5,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { editorReducer } from "../reducers/editorReducer";
 
 export function EditorProvider({ children, initialCategories }: { children: React.ReactNode, initialCategories: EditorCategory[] }) {
-  const [savedCategories, setSavedCategories] = useLocalStorage('editor_categories', initialCategories)
+  const [savedCategories, setSavedCategories] = useLocalStorage('editor-categories-v2', initialCategories)
 
   const initialState = {
     categories: savedCategories,
