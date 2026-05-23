@@ -3,6 +3,6 @@ import { EditorContext } from '../contexts/EditorContext'
 
 export function useEditor() {
   const ctx = useContext(EditorContext);
-  if (!ctx) throw new Error('useCategories must be used within CategoriesProvider');
+  if (!ctx) throw new Error('useEditor must be used within EditorProvider');
   return ctx;
 }
