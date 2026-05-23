@@ -12,9 +12,9 @@ export function AddCategoryForm() {
   },
     [newlyAddedCategoryId])
 
-  const handleAddCategory = (title: string) => {
+  const handleAddCategory = (name: string) => {
     const id = crypto.randomUUID();
-    dispatch({ type: 'addCategory', id: id, title: title });
+    dispatch({ type: 'addCategory', id: id, name: name });
   }
 
   const submitNewCategory = () => {

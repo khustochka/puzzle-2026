@@ -19,7 +19,7 @@ export function EntryForm({ category, entry }: {
   )
   const handleEntryUpdate = () => {
     if (entryInputRef.current)
-      dispatch({ type: 'updateEntry', categoryId: category.id, entryId: entry.id, title: entryInputRef.current?.value?.trim() });
+      dispatch({ type: 'updateEntry', categoryId: category.id, entryId: entry.id, value: entryInputRef.current?.value?.trim() });
     setIsEditing(false)
   }
 
@@ -30,7 +30,7 @@ export function EntryForm({ category, entry }: {
 
   const handleDeleteEntry = () => {
     dispatch({ type: 'deleteEntry', categoryId: category.id, entryId: entry.id })
-    console.log(`[Track] Deleted entry "${entry.title}" from category "${category.title}"`)
+    console.log(`[Track] Deleted entry "${entry.value}" from category "${category.name}"`)
   }
 
   return (
@@ -39,7 +39,7 @@ export function EntryForm({ category, entry }: {
         isEditing ?
           <>
             <input
-              defaultValue={entry.title}
+              defaultValue={entry.value}
               ref={entryInputRef}
               onKeyDown={handleEntryKeyDown}
               enterKeyHint="done"
@@ -59,7 +59,7 @@ export function EntryForm({ category, entry }: {
               onClick={() => setIsEditing(true)}
               className="cursor-text rounded px-0.5 py-0.5 -mx-1 hover:bg-yellow-100 transition"
             >
-              {entry.title}
+              {entry.value}
             </span>
             <span aria-hidden="true" className="h-4 w-px bg-indigo-300 ml-2" />
             <button

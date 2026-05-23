@@ -3,18 +3,18 @@ import type { EditorState, EditorCategory, EditorAction } from "../types/editorT
 function findCategoryWithEntry(categories: EditorCategory[], entry: string): EditorCategory | null {
   const entryNormalized = entry.toLowerCase();
   return categories.find(
-    (category) => category.entries.some(e => e.title.toLowerCase() === entryNormalized)
+    (category) => category.entries.some(e => e.value.toLowerCase() === entryNormalized)
   ) ?? null;
 }
 
-function isCategoryTitleTaken(categories: EditorCategory[], title: string): boolean {
-  const titleNormalized = title.toLowerCase();
-  return categories.some(c => c.title.toLowerCase() === titleNormalized);
+function isCategoryNameTaken(categories: EditorCategory[], name: string): boolean {
+  const nameNormalized = name.toLowerCase();
+  return categories.some(c => c.name.toLowerCase() === nameNormalized);
 }
 
 function addCategory(state: EditorState, action: Extract<EditorAction, { type: 'addCategory' }>): EditorState {
   const { categories } = state;
-  if (isCategoryTitleTaken(categories, action.title)) {
+  if (isCategoryNameTaken(categories, action.name)) {
     return {
       ...state,
       newlyAddedCategoryId: null,
@@ -25,14 +25,14 @@ function addCategory(state: EditorState, action: Extract<EditorAction, { type: '
     ...state,
     newlyAddedCategoryId: action.id,
     addCategoryError: null,
-    categories: [...categories, { id: action.id, title: action.title, entries: [] }]
+    categories: [...categories, { id: action.id, name: action.name, entries: [] }]
   };
 }
 
-function updateCategoryTitle(state: EditorState, action: Extract<EditorAction, { type: 'updateCategoryTitle' }>): EditorState {
+function updateCategoryName(state: EditorState, action: Extract<EditorAction, { type: 'updateCategoryName' }>): EditorState {
   return {
     ...state,
-    categories: state.categories.map(c => c.id === action.id ? { ...c, title: action.title } : c)
+    categories: state.categories.map(c => c.id === action.id ? { ...c, name: action.name } : c)
   };
 }
 
@@ -45,13 +45,13 @@ function deleteCategory(state: EditorState, action: Extract<EditorAction, { type
 
 function addEntry(state: EditorState, action: Extract<EditorAction, { type: 'addEntry' }>): EditorState {
   const { categories } = state;
-  const categoryWithDup = findCategoryWithEntry(categories, action.title);
+  const categoryWithDup = findCategoryWithEntry(categories, action.value);
   if (categoryWithDup) {
     return {
       ...state,
       addEntryError: {
         categoryId: action.categoryId,
-        message: `The entry "${action.title}" already exists in category "${categoryWithDup.title}"`
+        message: `The entry "${action.value}" already exists in category "${categoryWithDup.name}"`
       }
     };
   }
@@ -60,7 +60,7 @@ function addEntry(state: EditorState, action: Extract<EditorAction, { type: 'add
     addEntryError: null,
     categories: categories.map(category =>
       category.id === action.categoryId
-        ? { ...category, entries: [...category.entries, { id: action.entryId, title: action.title }] }
+        ? { ...category, entries: [...category.entries, { id: action.entryId, value: action.value }] }
         : category
     )
   };
@@ -74,7 +74,7 @@ function updateEntry(state: EditorState, action: Extract<EditorAction, { type: '
         ? {
             ...category,
             entries: category.entries.map(entry =>
-              entry.id === action.entryId ? { ...entry, title: action.title } : entry
+              entry.id === action.entryId ? { ...entry, value: action.value } : entry
             )
           }
         : category
@@ -109,7 +109,7 @@ function replaceCategories(_state: EditorState, action: Extract<EditorAction, { 
 export function editorReducer(state: EditorState, action: EditorAction): EditorState {
   switch (action.type) {
     case 'addCategory': return addCategory(state, action);
-    case 'updateCategoryTitle': return updateCategoryTitle(state, action);
+    case 'updateCategoryName': return updateCategoryName(state, action);
     case 'deleteCategory': return deleteCategory(state, action);
     case 'addEntry': return addEntry(state, action);
     case 'updateEntry': return updateEntry(state, action);

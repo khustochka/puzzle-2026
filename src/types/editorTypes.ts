@@ -1,11 +1,11 @@
 export type EditorEntry = {
   id: string
-  title: string
+  value: string
 }
 
 export type EditorCategory = {
   id: string
-  title: string
+  name: string
   entries: EditorEntry[]
 }
 
@@ -17,11 +17,11 @@ export type EditorState = {
 };
 
 export type EditorAction =
-  | { type: 'addCategory'; id: string; title: string }
-  | { type: 'updateCategoryTitle'; id: string; title: string }
+  | { type: 'addCategory'; id: string; name: string }
+  | { type: 'updateCategoryName'; id: string; name: string }
   | { type: 'deleteCategory'; id: string }
-  | { type: 'addEntry'; categoryId: string; entryId: string; title: string }
-  | { type: 'updateEntry'; categoryId: string; entryId: string; title: string }
+  | { type: 'addEntry'; categoryId: string; entryId: string; value: string }
+  | { type: 'updateEntry'; categoryId: string; entryId: string; value: string }
   | { type: 'deleteEntry'; categoryId: string; entryId: string }
   | { type: 'clearErrors' }
   | { type: 'replaceCategories', data: EditorCategory[] };

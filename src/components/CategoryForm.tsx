@@ -9,12 +9,12 @@ export function CategoryForm({ category, ref }: {
   ref: React.Ref<HTMLLIElement>
 }) {
 
-  const titleInputRef = useRef<HTMLInputElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const { state: { addEntryError }, dispatch } = useEditor();
 
   useEffect(() => {
-    if (isEditing) titleInputRef.current?.focus()
+    if (isEditing) nameInputRef.current?.focus()
   },
     [isEditing]
   )
@@ -46,28 +46,28 @@ export function CategoryForm({ category, ref }: {
     );
   }
 
-  const handleTitleUpdate = () => {
-    if (titleInputRef.current)
-      dispatch({ type: 'updateCategoryTitle', id: category.id, title: titleInputRef.current?.value?.trim() });
+  const handleNameUpdate = () => {
+    if (nameInputRef.current)
+      dispatch({ type: 'updateCategoryName', id: category.id, name: nameInputRef.current?.value?.trim() });
     setIsEditing(false)
   }
 
-  const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleTitleUpdate();
+  const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') handleNameUpdate();
     if (e.key === 'Escape') setIsEditing(false)
   }
 
   const handleDeleteCategory = () => {
     dispatch({ type: 'deleteCategory', id: category.id })
-    console.log(`[Track] Deleted category "${category.title}" with entries:
-      ${category.entries.map((entry) => entry.title).join(", ")}`)
+    console.log(`[Track] Deleted category "${category.name}" with entries:
+      ${category.entries.map((entry) => entry.value).join(", ")}`)
   }
 
   const newEntryRef = useRef<HTMLInputElement>(null);
 
-  const handleAddEntry = (title: string) => {
+  const handleAddEntry = (value: string) => {
     const id = crypto.randomUUID();
-    dispatch({ type: 'addEntry', categoryId: category.id, entryId: id, title: title });
+    dispatch({ type: 'addEntry', categoryId: category.id, entryId: id, value: value });
   }
 
   const submitNewEntry = () => {
@@ -105,15 +105,15 @@ export function CategoryForm({ category, ref }: {
           isEditing ?
             <div className="flex items-center gap-2">
               <input
-                defaultValue={category.title}
-                onKeyDown={(e) => handleTitleKeyDown(e)}
-                ref={titleInputRef}
+                defaultValue={category.name}
+                onKeyDown={(e) => handleNameKeyDown(e)}
+                ref={nameInputRef}
                 enterKeyHint="done"
                 className="flex-1 min-w-0 text-2xl font-bold leading-tight text-slate-800 bg-white rounded-md border border-slate-300 shadow-sm px-2 py-1 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />
               <button
                 type="button"
-                onClick={handleTitleUpdate}
+                onClick={handleNameUpdate}
                 className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
               >
                 Save
@@ -123,7 +123,7 @@ export function CategoryForm({ category, ref }: {
               onClick={() => setIsEditing(true)}
               className="max-w-full text-2xl font-bold leading-tight text-slate-800 px-1 py-1 -mx-1 rounded cursor-text border-b-2 border-transparent hover:bg-yellow-100 transition"
             >
-              {category.title}
+              {category.name}
             </h2>
         }
 
