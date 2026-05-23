@@ -34,7 +34,7 @@ const initialCategories: EditorCategory[] = [
   }
 ]
 
-export default function App() {
+export default function EditorApp() {
   return (
     <ErrorBoundary>
       <EditorProvider initialCategories={initialCategories}>
