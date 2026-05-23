@@ -1,48 +1,38 @@
-// import type { Category } from './types/editorTypes'
-// import { EditorBoard } from './components/EditorBoard'
-// import { EditorProvider } from './components/EditorProvider'
-// import { ErrorBoundary } from './components/ErrorBoundary'
-
 import { BoardProvider } from "./components/BoardProvider";
 import { PuzzleBoard } from "./components/PuzzleBoard";
+import type { Board, BoardRow } from "./types/boardTypes";
 
-// const initialCategories: Category[] = [
-//   {
-//     "id": crypto.randomUUID(),
-//     "name": "Famous locomotives",
-//     "entries": [
-//       {
-//         "id": crypto.randomUUID(),
-//         "value": "Salamanca"
-//       },
-//       {
-//         "id": crypto.randomUUID(),
-//         "value": "CN-2747"
-//       }
-//     ]
-//   },
-//   {
-//     "id": crypto.randomUUID(),
-//     "name": "Famous ships",
-//     "entries": [
-//       {
-//         "id": crypto.randomUUID(),
-//         "value": "Santa Maria"
-//       },
-//       {
-//         "id": crypto.randomUUID(),
-//         "value": "Titanic"
-//       }
-//     ]
-//   }
-// ]
+const initialBoard: Board = [];
 
-export default function EditorApp() {
+for (let i = 1; i <= 45; i++) {
+  const category = {
+    id: crypto.randomUUID(),
+    name: `C${i}`
+  }
+  const row: BoardRow = {id: `C${i}`, cells: []};
+  for (let j = 1; j <= 45; j++) {
+    row.cells.push(
+      {
+        id: `C${i}-E${j}`,
+        category: category,
+        entries: [
+          {
+            id: crypto.randomUUID(),
+            value: `C${i}-E${j}`
+          }
+        ]
+      }
+    )
+  }
+  initialBoard.push(row);
+}
+
+export default function App() {
   return (
     // <ErrorBoundary>
-      <BoardProvider initialBoard={[]}>
-        <PuzzleBoard />
-      </BoardProvider>
+    <BoardProvider initialBoard={initialBoard}>
+      <PuzzleBoard />
+    </BoardProvider>
     // </ErrorBoundary>
   )
 }

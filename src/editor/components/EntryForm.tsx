@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useEditor } from "../hooks/useEditor";
-import type { Category, Entry } from "../../shared/types";
+import type { EditorCategory, EditorEntry } from "../types/editorTypes";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { lookupCategoryWithEntry } from "../reducers/validators";
 
 export function EntryForm({ category, entry }: {
-  category: Category;
-  entry: Entry
+  category: EditorCategory;
+  entry: EditorEntry
 }) {
 
   const [isEditing, setIsEditing] = useState(false);

@@ -1,7 +1,23 @@
+import { useBoard } from "../hooks/useBoard"
+
 export function PuzzleBoard() {
-  return(
+  const { state: { board } } = useBoard();
+
+  return (
     <div>
-      Puzzle
+      {
+        board.map((row) => (
+          <div key={row.id}>
+            {
+              row.cells.map((box) => (
+                <div key={box.id} className="inline-block">
+                  {box.entries.map((entry) => entry.value).join("; ")}
+                </div>
+              ))
+            }
+          </div>
+        ))
+      }
     </div>
   )
 }

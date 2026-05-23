@@ -1,11 +1,23 @@
-import type { Category, Entry } from "../../shared/types"
-
-export type BoardBox = {
-  category: Category;
-  entries: Entry[];
+export type BoardEntry = {
+  id: string;
+  value: string;
 }
 
-export type BoardRow = BoardBox[]
+export type BoardCategory = {
+  id: string;
+  name: string;
+}
+
+export type BoardBox = {
+  id: string;
+  category: BoardCategory;
+  entries: BoardEntry[];
+}
+
+export type BoardRow = {
+  id: string;
+  cells: BoardBox[];
+}
 
 export type Board = BoardRow[]
 

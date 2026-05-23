@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useEditor } from "../hooks/useEditor";
-import type { Category } from "../../shared/types";
+import type { EditorCategory } from "../types/editorTypes";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { EntryForm } from "./EntryForm";
 import { AddEntryForm } from "./AddEntryForm";
 import { isCategoryNameTaken } from "../reducers/validators";
 
 export function CategoryForm({ category, ref }: {
-  category: Category;
+  category: EditorCategory;
   ref: React.Ref<HTMLLIElement>
 }) {
 

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useReducer } from "react";
 import { EditorContext } from "../contexts/EditorContext";
-import type { Category } from "../../shared/types";
+import type { EditorCategory } from "../types/editorTypes";
 import { useLocalStorage } from "../../shared/hooks/useLocalStorage";
 import { editorReducer } from "../reducers/editorReducer";
 import { buildEntryLookup } from "../reducers/validators";
 
 type LegacyEntry = { id: string; title: string };
-type LegacyCategory = { id: string; title: string; entries: LegacyEntry[] };
+type LegacyEditorCategory = { id: string; title: string; entries: LegacyEntry[] };
 
 function migrateLegacyStorage() {
   const OLD_KEY = 'editor_categories';
@@ -15,8 +15,8 @@ function migrateLegacyStorage() {
   const raw = localStorage.getItem(OLD_KEY);
   if (raw === null) return;
   try {
-    const legacy: LegacyCategory[] = JSON.parse(raw);
-    const migrated: Category[] = legacy.map(c => ({
+    const legacy: LegacyEditorCategory[] = JSON.parse(raw);
+    const migrated: EditorCategory[] = legacy.map(c => ({
       id: c.id,
       name: c.title,
       entries: c.entries.map(e => ({ id: e.id, value: e.title })),
@@ -29,7 +29,7 @@ function migrateLegacyStorage() {
 }
 migrateLegacyStorage();
 
-export function EditorProvider({ children, initialCategories }: { children: React.ReactNode, initialCategories: Category[] }) {
+export function EditorProvider({ children, initialCategories }: { children: React.ReactNode, initialCategories: EditorCategory[] }) {
   const [savedCategories, setSavedCategories] = useLocalStorage('editor-categories-v2', initialCategories)
 
   const initialState = {

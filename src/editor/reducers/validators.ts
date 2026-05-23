@@ -1,7 +1,6 @@
-import type { EntryLookupMap, EntryLookupValue } from "../types/editorTypes";
-import type { Category } from "../../shared/types";
+import type { EditorCategory, EntryLookupMap, EntryLookupValue } from "../types/editorTypes";
 
-export const buildEntryLookup = (categories: Category[]): EntryLookupMap =>
+export const buildEntryLookup = (categories: EditorCategory[]): EntryLookupMap =>
   categories.reduce(
     (lookup, category) => {
       category.entries.forEach((entry) =>
@@ -17,10 +16,10 @@ export function normalize(s: string): string {
 }
 
 export function findCategoryWithEntry(
-  categories: Category[],
+  categories: EditorCategory[],
   entry: string,
   excludeEntryId?: string
-): Category | null {
+): EditorCategory | null {
   const entryNormalized = normalize(entry);
   return categories.find(
     (category) => category.entries.some(
@@ -33,7 +32,7 @@ export function lookupCategoryWithEntry(
   lookup: EntryLookupMap,
   entry: string,
   excludeEntryId?: string
-): Category | null {
+): EditorCategory | null {
   const entryNormalized = normalize(entry);
   const found = lookup.get(entryNormalized);
   if (!found || found.entryId === excludeEntryId) return null;
@@ -41,7 +40,7 @@ export function lookupCategoryWithEntry(
 }
 
 export function isCategoryNameTaken(
-  categories: Category[],
+  categories: EditorCategory[],
   name: string,
   excludeCategoryId?: string
 ): boolean {

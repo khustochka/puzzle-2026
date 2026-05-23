@@ -1,4 +1,4 @@
-import type { Category } from "../types/editorTypes";
+import type { EditorCategory } from "../types/editorTypes";
 import { useState, useRef, useEffect } from 'react';
 import { CategoryForm } from "./CategoryForm";
 import { AddCategoryForm } from "./AddCategoryForm"
@@ -229,7 +229,7 @@ export function EditorBoard() {
       <div className="w-full py-10 px-2 sm:px-4">
         <ol className="list-decimal pl-7 sm:pl-16 marker:text-lg sm:marker:text-3xl marker:font-bold marker:text-indigo-600 flex flex-col gap-6">
           {
-            categories.map((category: Category) => (
+            categories.map((category: EditorCategory) => (
               <CategoryForm
                 ref={category.id === newlyAddedCategoryId ? newlyAddedCategoryRef : null}
                 key={category.id}
