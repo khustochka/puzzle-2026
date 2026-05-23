@@ -65,7 +65,7 @@ export function EntryForm({ category, entry }: {
             <button
               type="button"
               onClick={handleDeleteEntry}
-              aria-label="Delete word"
+              aria-label="Delete entry"
               className="flex h-5 w-5 items-center justify-center rounded text-red-500 hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
             >
               <XMarkIcon className="h-4 w-4" />

@@ -11,7 +11,7 @@ export function CategoryForm({ category, ref }: {
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const { state: { addWordError }, dispatch } = useEditor();
+  const { state: { addEntryError }, dispatch } = useEditor();
 
   useEffect(() => {
     if (isEditing) titleInputRef.current?.focus()
@@ -63,26 +63,26 @@ export function CategoryForm({ category, ref }: {
       ${category.entries.map((entry) => entry.title).join(", ")}`)
   }
 
-  const newWordRef = useRef<HTMLInputElement>(null);
+  const newEntryRef = useRef<HTMLInputElement>(null);
 
-  const handleAddWord = (title: string) => {
+  const handleAddEntry = (title: string) => {
     const id = crypto.randomUUID();
     dispatch({ type: 'addEntry', categoryId: category.id, entryId: id, title: title });
   }
 
-  const submitNewWord = () => {
+  const submitNewEntry = () => {
     dispatch({ type: 'clearErrors' });
-    const value = newWordRef.current?.value.trim();
+    const value = newEntryRef.current?.value.trim();
     if (!value) return;
-    handleAddWord(value);
-    if (newWordRef.current) newWordRef.current.value = '';
-    newWordRef.current?.focus();
+    handleAddEntry(value);
+    if (newEntryRef.current) newEntryRef.current.value = '';
+    newEntryRef.current?.focus();
   };
 
-  const handleNewWordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleNewEntryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      submitNewWord();
+      submitNewEntry();
     }
     if (e.key === 'Escape') {
       dispatch({ type: 'clearErrors' });
@@ -149,34 +149,34 @@ export function CategoryForm({ category, ref }: {
 
         <div className="mt-6 border-t-2 border-dashed border-slate-300 pt-5">
           <div className="w-full sm:w-1/2 flex items-start gap-2">
-            <label htmlFor={`newWord-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap pt-1.5">
+            <label htmlFor={`newEntry-${category.id}`} className="text-sm font-medium text-slate-500 whitespace-nowrap pt-1.5">
               Add entry:
             </label>
             <div className="flex-1 min-w-0 flex flex-col gap-1">
               <div className="flex items-center gap-2">
                 <input
-                  id={`newWord-${category.id}`}
-                  ref={newWordRef}
+                  id={`newEntry-${category.id}`}
+                  ref={newEntryRef}
                   defaultValue=""
-                  onKeyDown={handleNewWordKeyDown}
+                  onKeyDown={handleNewEntryKeyDown}
                   enterKeyHint="done"
                   className="flex-1 min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                 />
                 <button
                   type="button"
-                  onClick={submitNewWord}
+                  onClick={submitNewEntry}
                   className="rounded-md bg-indigo-200 px-3 py-1.5 text-sm font-medium text-indigo-800 shadow-sm hover:bg-indigo-300 transition cursor-pointer"
                 >
                   Add
                 </button>
               </div>
-              {addWordError && addWordError.categoryId == category.id && (
+              {addEntryError && addEntryError.categoryId == category.id && (
                 <p
                   id="newCategory-error"
                   role="alert"
                   className="text-sm font-medium text-red-600"
                 >
-                  {addWordError.message}
+                  {addEntryError.message}
                 </p>
               )}
             </div>

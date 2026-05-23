@@ -1,9 +1,9 @@
 import type { EditorState, EditorCategory, EditorAction } from "../types/editorTypes";
 
-function findCategoryWithWord(categories: EditorCategory[], word: string): EditorCategory | null {
-  const wordNormalized = word.toLowerCase();
+function findCategoryWithEntry(categories: EditorCategory[], entry: string): EditorCategory | null {
+  const entryNormalized = entry.toLowerCase();
   return categories.find(
-    (category) => category.entries.some(e => e.title.toLowerCase() === wordNormalized)
+    (category) => category.entries.some(e => e.title.toLowerCase() === entryNormalized)
   ) ?? null;
 }
 
@@ -45,19 +45,19 @@ function deleteCategory(state: EditorState, action: Extract<EditorAction, { type
 
 function addEntry(state: EditorState, action: Extract<EditorAction, { type: 'addEntry' }>): EditorState {
   const { categories } = state;
-  const categoryWithDup = findCategoryWithWord(categories, action.title);
+  const categoryWithDup = findCategoryWithEntry(categories, action.title);
   if (categoryWithDup) {
     return {
       ...state,
-      addWordError: {
+      addEntryError: {
         categoryId: action.categoryId,
-        message: `The word "${action.title}" already exists in category "${categoryWithDup.title}"`
+        message: `The entry "${action.title}" already exists in category "${categoryWithDup.title}"`
       }
     };
   }
   return {
     ...state,
-    addWordError: null,
+    addEntryError: null,
     categories: categories.map(category =>
       category.id === action.categoryId
         ? { ...category, entries: [...category.entries, { id: action.entryId, title: action.title }] }
@@ -87,14 +87,14 @@ function deleteEntry(state: EditorState, action: Extract<EditorAction, { type: '
     ...state,
     categories: state.categories.map(category =>
       category.id === action.categoryId
-        ? { ...category, entries: category.entries.filter(word => word.id !== action.entryId) }
+        ? { ...category, entries: category.entries.filter(entry => entry.id !== action.entryId) }
         : category
     )
   };
 }
 
 function clearErrors(state: EditorState): EditorState {
-  return { ...state, addCategoryError: null, addWordError: null };
+  return { ...state, addCategoryError: null, addEntryError: null };
 }
 
 function replaceCategories(_state: EditorState, action: Extract<EditorAction, { type: 'replaceCategories' }>): EditorState {
@@ -102,7 +102,7 @@ function replaceCategories(_state: EditorState, action: Extract<EditorAction, { 
     categories: action.data,
     newlyAddedCategoryId: null,
     addCategoryError: null,
-    addWordError: null
+    addEntryError: null
   };
 }
 

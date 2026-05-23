@@ -13,7 +13,7 @@ export type EditorState = {
   categories: EditorCategory[];
   newlyAddedCategoryId: string | null;
   addCategoryError: string | null;
-  addWordError: { categoryId: string, message: string } | null;
+  addEntryError: { categoryId: string, message: string } | null;
 };
 
 export type EditorAction =
