@@ -24,7 +24,7 @@ export function Box({ box, capacity }: { box: BoardBox, capacity: number }) {
         dropRef(node);
       }}
       title={box.entries.join("\n")}
-      className={`${status !== 'single' ? 'font-bold' : ''} ${isShakingTarget ? 'animate-shake border-red-500 hover:border-red-500 bg-red-100' : isShaking ? 'animate-shake border-slate-300 hover:border-slate-400 bg-white' : isBlinking ? 'animate-merge-blink border-green-500 hover:border-green-500 bg-green-100' : isDropTarget && !isDragSource ? 'border-green-500 hover:border-green-500 bg-green-100' : 'border-slate-300 hover:border-slate-400 bg-white'} w-24 h-16 shrink-0 border-2 rounded-md p-2 overflow-hidden text-ellipsis text-xs flex items-start justify-center text-center cursor-grab shadow-sm transition hover:shadow-md`}
+      className={`${status !== 'single' ? 'font-bold' : ''} ${isShakingTarget ? 'animate-shake border-red-500 hover:border-red-500 bg-red-100' : isShaking ? 'animate-shake border-slate-300 hover:border-slate-400 bg-white' : isBlinking ? 'animate-merge-blink border-green-500 hover:border-green-500 bg-green-100' : isDropTarget && !isDragSource ? (status === 'full' ? 'border-red-500 hover:border-red-500 bg-red-100' : 'border-green-500 hover:border-green-500 bg-green-100') : status === 'full' ? 'border-slate-700 hover:border-slate-800 bg-slate-700 text-white' : 'border-slate-300 hover:border-slate-400 bg-white'} w-24 h-16 shrink-0 border-2 rounded-md p-2 overflow-hidden text-ellipsis text-xs flex items-start justify-center text-center cursor-grab shadow-sm transition hover:shadow-md`}
     >
       {status === 'full' ? box.category.name : box.entries.join("; ")}
     </div>
