@@ -4,18 +4,33 @@ import { BoardContext } from "../contexts/BoardContext";
 import { boardReducer } from "../reducers/boardReducer";
 import type { Board, BoardState } from "../types/boardTypes";
 
-export function BoardProvider({ children, initialBoard }: { children: React.ReactNode, initialBoard: Board }) {
-  const [savedBoard, setSavedBoard] = useLocalStorage('puzzle-board', initialBoard)
+export function BoardProvider({ children }: { children: React.ReactNode }) {
+  const [savedBoard, setSavedBoard] = useLocalStorage<Board | null>('puzzle-board', null)
 
   const [state, dispatch] = useReducer(
     boardReducer,
     savedBoard,
-    (board): BoardState => ({ board }),
+    (board): BoardState => (board ?
+      { board, loading: false, loadingError: null } :
+      { board, loading: true, loadingError: null }
+    ),
   );
 
   useEffect(
-    () => setSavedBoard(state.board),
+    () => { if (state.board) setSavedBoard(state.board) },
     [state.board, setSavedBoard]
+  )
+
+  useEffect(
+    () => {
+      if (state.loading && !state.loadingError) {
+        fetch(import.meta.env.BASE_URL + 'demo.json')
+          .then(r => r.json())
+          .then(data => dispatch({ type: 'fileLoadResult', result: { ok: true, data } }))
+          .catch(err => dispatch({ type: 'fileLoadResult', result: { ok: false, error: String(err) } }));
+      }
+    },
+    [state.loading, state.loadingError]
   )
 
   return (

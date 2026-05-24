@@ -2,11 +2,19 @@ import { useBoard } from "../hooks/useBoard"
 import { Box } from "./Box";
 
 export function PuzzleBoard() {
-  const { state: { board } } = useBoard();
+  const { state: { loading, loadingError, board } } = useBoard();
 
   return (
     <div className="inline-flex flex-col gap-2 p-4">
-      {
+      {loading &&
+        <div>Loading...</div>
+      }
+      {loadingError &&
+        <div>
+          {loadingError}
+        </div>
+      }
+      {board &&
         board.rows.map((row) => (
           <div key={row.id} className="flex flex-row gap-2 flex-nowrap">
             {

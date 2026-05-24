@@ -22,8 +22,11 @@ export type Board = {
 export type BoxStatus = 'single' | 'multiple' | 'full';
 
 export type BoardState = {
-  board: Board;
+  loading: boolean;
+  loadingError: string | null;
+  board: Board | null;
 }
 
 export type BoardAction =
-  | { type: 'mergeBoxes'; source: BoardBox; target: BoardBox };
+  | { type: 'mergeBoxes'; source: BoardBox; target: BoardBox }
+  | { type: 'fileLoadResult'; result: { ok: true; data: unknown } | { ok: false; error: string } };

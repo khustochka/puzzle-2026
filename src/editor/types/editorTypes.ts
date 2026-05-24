@@ -1,13 +1,5 @@
-export type EditorEntry = {
-  id: string;
-  value: string;
-}
-
-export type EditorCategory = {
-  id: string;
-  name: string;
-  entries: EditorEntry[];
-}
+export type { EditorEntry, EditorCategory } from "../../shared/types";
+import type { EditorCategory } from "../../shared/types";
 
 export type EditorState = {
   categories: EditorCategory[];
