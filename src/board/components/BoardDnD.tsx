@@ -16,7 +16,7 @@ export function BoardDnD({ children }: { children: React.ReactNode }) {
     const target = findBoxById(state, targetId);
 
 
-    if (source && target && source.category.id === source.category.id) {
+    if (source && target && source.category.id === target.category.id) {
       dispatch({ type: 'mergeBoxes', source, target });
     } else {
       // playRejectAnimation(sourceId); // optional
