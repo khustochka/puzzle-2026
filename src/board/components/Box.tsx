@@ -20,7 +20,7 @@ export function Box({ box, capacity }: { box: BoardBox, capacity: number }) {
       }}
       style={{ background: isDropTarget ? 'lightblue' : 'white' }}
       title={box.entries.join("\n")}
-      className={`${status !== 'single' ? 'font-bold' : ''} w-24 h-16 shrink-0 border border-gray-300 rounded-md bg-white p-2 overflow-hidden text-ellipsis text-xs flex items-start justify-center text-center cursor-grab`}
+      className={`${status !== 'single' ? 'font-bold' : ''} w-24 h-16 shrink-0 border-2 border-slate-300 rounded-md bg-white p-2 overflow-hidden text-ellipsis text-xs flex items-start justify-center text-center cursor-grab shadow-sm transition hover:shadow-md hover:border-slate-400`}
     >
       {status === 'full' ? box.category.name : box.entries.join("; ")}
     </div>

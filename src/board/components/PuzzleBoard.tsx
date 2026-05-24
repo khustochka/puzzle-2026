@@ -6,8 +6,8 @@ export function PuzzleBoard() {
   const { state: { loading, loadingError, board }, dispatch } = useBoard();
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-10 flex items-start justify-between gap-6 px-6 py-3 bg-white border-b border-slate-200 shadow-sm">
+    <div className="flex flex-col min-h-screen bg-slate-50">
+      <header className="sticky top-0 z-10 flex items-start justify-between gap-6 px-6 py-3 bg-yellow-200/80 backdrop-blur border-b border-yellow-300 shadow-sm">
         <div className="flex flex-col">
           <h1 className="text-xl font-semibold text-slate-800">Puzzle 2026</h1>
           <span
