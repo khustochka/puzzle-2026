@@ -1,5 +1,3 @@
-export const MAX_SIZE = 5;
-
 export type BoardCategory = {
   id: string;
   name: string;
@@ -16,7 +14,10 @@ export type BoardRow = {
   cells: BoardBox[];
 }
 
-export type Board = BoardRow[]
+export type Board = {
+  size: number;
+  rows: BoardRow[];
+}
 
 export type BoxStatus = 'single' | 'multiple' | 'full';
 

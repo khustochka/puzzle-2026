@@ -1,14 +1,14 @@
-import { MAX_SIZE, type Board, type BoardBox } from "../types/boardTypes";
+import { type Board, type BoardBox, type BoardRow } from "../types/boardTypes";
 
-export function createInitialBoard(): Board {
+export function createInitialBoard(size: number): Board {
   const flatBoard = [];
 
-  for (let i = 1; i <= MAX_SIZE; i++) {
+  for (let i = 1; i <= size; i++) {
     const category = {
       id: `C${i}`,
       name: `C${i}`,
     };
-    for (let j = 1; j <= MAX_SIZE; j++) {
+    for (let j = 1; j <= size; j++) {
       flatBoard.push({
         id: `C${i}-E${j}`,
         category: category,
@@ -17,7 +17,10 @@ export function createInitialBoard(): Board {
     }
   }
 
-  return applyRows(shuffleToGrid(flatBoard, MAX_SIZE));
+  return {
+    size: size,
+    rows: applyRows(shuffleToGrid(flatBoard, size))
+  }
 }
 
 function shuffleToGrid<T>(arr: T[], n: number): T[][] {
@@ -42,6 +45,6 @@ function shuffleToGrid<T>(arr: T[], n: number): T[][] {
   return grid;
 }
 
-function applyRows(arr: BoardBox[][]): Board {
+function applyRows(arr: BoardBox[][]): BoardRow[] {
   return arr.map((row, idx) => ({id: `R${idx}`, cells: row}))
 }

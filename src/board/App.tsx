@@ -3,7 +3,7 @@ import { BoardProvider } from "./components/BoardProvider";
 import { PuzzleBoard } from "./components/PuzzleBoard";
 import { createInitialBoard } from "./data/initialBoard";
 
-const initialBoard = createInitialBoard();
+const initialBoard = createInitialBoard(5);
 
 export default function App() {
   return (
