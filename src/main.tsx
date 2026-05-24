@@ -10,7 +10,7 @@ import App from './board/App.tsx'
       </StrictMode>
     ) : (
       <a
-        href="edit.html"
+        href={import.meta.env.BASE_URL + "edit.html"}
         style={{
           display: 'inline-block',
           margin: '2rem',
