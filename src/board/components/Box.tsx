@@ -18,9 +18,9 @@ export function Box({ box }: { box: BoardBox }) {
       }}
       style={{ background: isDropTarget ? 'lightblue' : 'white' }}
       title={box.entries.join("\n")}
-      className={`${status === 'multiple' ? 'font-bold' : '' } w-24 h-16 shrink-0 border border-gray-300 rounded-md bg-white p-2 overflow-hidden text-ellipsis text-xs flex items-start justify-center text-center cursor-grab`}
+      className={`${status !== 'single' ? 'font-bold' : '' } w-24 h-16 shrink-0 border border-gray-300 rounded-md bg-white p-2 overflow-hidden text-ellipsis text-xs flex items-start justify-center text-center cursor-grab`}
     >
-      {box.entries.join("; ")}
+      {status === 'full' ? box.category.name : box.entries.join("; ")}
     </div>
   )
 }
