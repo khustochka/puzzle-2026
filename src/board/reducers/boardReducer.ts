@@ -10,14 +10,16 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
           return {
             board: board,
             loading: false,
-            loadingError: null
+            loadingError: null,
+            selectedBox: null,
           }
         }
         catch {
           return {
             board: null,
             loading: false,
-            loadingError: "Failed to load board"
+            loadingError: "Failed to load board",
+            selectedBox: null,
           }
         }
       }
@@ -25,7 +27,8 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
         return {
           board: null,
           loading: false,
-          loadingError: "Failed to load board"
+          loadingError: "Failed to load board",
+          selectedBox: null,
         }
     case 'mergeBoxes':
       if (!state.board) return state;
@@ -33,11 +36,37 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
         ...state,
         board: mergeBoxes(state.board, action.source, action.target)
       }
+    case 'selectBox':
+      if (!state.board) return state;
+      return {
+        ...state,
+        selectedBox: action.box
+      }
+    case 'boxClicked': {
+      if (!state.board) return state;
+      const { box, capacity } = action;
+      const isFull = box.entries.length >= capacity;
+      const selected = state.selectedBox;
+      if (!selected) {
+        if (isFull) return state;
+        return { ...state, selectedBox: box };
+      }
+      if (selected.id === box.id) return { ...state, selectedBox: null };
+      if (selected.category.id === box.category.id) {
+        return {
+          ...state,
+          board: mergeBoxes(state.board, selected, box),
+          selectedBox: null,
+        };
+      }
+      return { ...state, selectedBox: null };
+    }
     case 'resetBoard':
       return {
         board: null,
         loading: true,
         loadingError: null,
+        selectedBox: null,
       }
     default: {
       const _exhaustive: never = action;

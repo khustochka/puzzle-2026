@@ -16,6 +16,20 @@ export const FxContext = createContext<FxContextValue>({
   blinkNonce: 0,
 });
 
+export type FxTriggers = {
+  triggerShake: (sourceId: string, targetId: string) => void;
+  triggerBlink: (id: string) => void;
+};
+
+export const FxTriggersContext = createContext<FxTriggers>({
+  triggerShake: () => {},
+  triggerBlink: () => {},
+});
+
+export function useFxTriggers() {
+  return useContext(FxTriggersContext);
+}
+
 export function useBoxFx(id: string) {
   const fx = useContext(FxContext);
   return {

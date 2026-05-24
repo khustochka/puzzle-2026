@@ -11,8 +11,8 @@ export function BoardProvider({ children }: { children: React.ReactNode }) {
     boardReducer,
     savedBoard,
     (board): BoardState => (board ?
-      { board, loading: false, loadingError: null } :
-      { board, loading: true, loadingError: null }
+      { board, loading: false, loadingError: null, selectedBox: null } :
+      { board, loading: true, loadingError: null, selectedBox: null }
     ),
   );
 

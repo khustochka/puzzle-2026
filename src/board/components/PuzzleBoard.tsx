@@ -1,9 +1,28 @@
+import { useCallback, useEffect, useRef } from "react";
 import { ArrowPathIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useBoard } from "../hooks/useBoard"
 import { Box } from "./Box";
+import { useFxTriggers } from "./boxFx";
+import type { BoardBox } from "../types/boardTypes";
 
 export function PuzzleBoard() {
-  const { state: { loading, loadingError, board }, dispatch } = useBoard();
+  const { state: { loading, loadingError, board, selectedBox }, dispatch } = useBoard();
+  const { triggerShake, triggerBlink } = useFxTriggers();
+
+  const selectedBoxRef = useRef(selectedBox);
+  useEffect(() => { selectedBoxRef.current = selectedBox; }, [selectedBox]);
+
+  const handleBoxClick = useCallback((box: BoardBox, capacity: number) => {
+    const selected = selectedBoxRef.current;
+    if (selected && selected.id !== box.id) {
+      if (selected.category.id === box.category.id) {
+        triggerBlink(box.id);
+      } else {
+        triggerShake(selected.id, box.id);
+      }
+    }
+    dispatch({ type: 'boxClicked', box, capacity });
+  }, [dispatch, triggerShake, triggerBlink]);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -83,7 +102,12 @@ export function PuzzleBoard() {
                 {
                   row.cells.map((box) => (
                     <Box
-                      key={box.id} box={box} capacity={board.size} />
+                      key={box.id}
+                      box={box}
+                      capacity={board.size}
+                      isSelected={selectedBox?.id === box.id}
+                      onClick={handleBoxClick}
+                    />
                   ))
                 }
               </div>

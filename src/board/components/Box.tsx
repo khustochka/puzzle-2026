@@ -1,13 +1,15 @@
+import { memo } from "react";
 import { type BoardBox, type BoxStatus } from "../types/boardTypes";
-import { useDraggable, useDroppable } from '@dnd-kit/react';
 import { useBoxFx } from "./boxFx";
 
-export function Box({ box, capacity }: { box: BoardBox, capacity: number }) {
-  const { ref: dragRef, isDragSource } = useDraggable({ id: box.id });
-  const { ref: dropRef, isDropTarget } = useDroppable({
-    id: box.id,
-    disabled: isDragSource
-  });
+type BoxProps = {
+  box: BoardBox;
+  capacity: number;
+  isSelected: boolean;
+  onClick: (box: BoardBox, capacity: number) => void;
+};
+
+export const Box = memo(function Box({ box, capacity, isSelected, onClick }: BoxProps) {
   const { isShaking, isShakingTarget, shakeNonce, isBlinking, blinkNonce } = useBoxFx(box.id);
 
   let status: BoxStatus = 'single';
@@ -19,12 +21,9 @@ export function Box({ box, capacity }: { box: BoardBox, capacity: number }) {
   return (
     <div
       key={fxKey}
-      ref={(node) => {
-        dragRef(node);
-        dropRef(node);
-      }}
+      onClick={() => onClick(box, capacity)}
       title={box.entries.join("\n")}
-      className={`${status !== 'single' ? 'font-bold' : ''} ${isShakingTarget ? 'animate-shake border-red-500 hover:border-red-500 bg-red-100' : isShaking ? 'animate-shake border-slate-300 hover:border-slate-400 bg-white' : isBlinking ? 'animate-merge-blink border-green-500 hover:border-green-500 bg-green-100' : isDropTarget && !isDragSource ? (status === 'full' ? 'border-red-500 hover:border-red-500 bg-red-100' : 'border-green-500 hover:border-green-500 bg-green-100') : status === 'full' ? 'border-slate-700 hover:border-slate-800 bg-slate-700 text-white' : 'border-slate-300 hover:border-slate-400 bg-white'} relative w-24 h-16 shrink-0 border-2 rounded-md p-2 overflow-hidden text-xs flex items-center justify-center text-center cursor-grab shadow-sm transition hover:shadow-md`}
+      className={`${status !== 'single' ? 'font-bold' : ''} ${isShakingTarget ? 'animate-shake border-red-500 hover:border-red-500 bg-red-100' : isShaking ? 'animate-shake border-slate-300 hover:border-slate-400 bg-white' : isBlinking ? 'animate-merge-blink border-green-500 hover:border-green-500 bg-green-100' : isSelected ? 'border-blue-500 hover:border-blue-600 bg-blue-100 ring-2 ring-blue-300' : status === 'full' ? 'border-slate-700 hover:border-slate-800 bg-slate-700 text-white' : 'border-slate-300 hover:border-slate-400 bg-white'} relative w-24 h-16 shrink-0 border-2 rounded-md p-2 overflow-hidden text-xs flex items-center justify-center text-center cursor-pointer shadow-sm transition hover:shadow-md`}
     >
       {status === 'multiple' && (
         <span className="absolute top-0.5 left-1 text-red-600 font-bold leading-none">
@@ -36,4 +35,4 @@ export function Box({ box, capacity }: { box: BoardBox, capacity: number }) {
       </span>
     </div>
   )
-}
+});

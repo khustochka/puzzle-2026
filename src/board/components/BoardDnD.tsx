@@ -1,9 +1,9 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { DragDropProvider } from "@dnd-kit/react";
 import type { DragEndEvent } from "@dnd-kit/abstract";
 import { useBoard } from "../hooks/useBoard";
 import { findBoxById } from "../reducers/boardSelectors";
-import { FxContext, type FxContextValue } from "./boxFx";
+import { FxContext, FxTriggersContext, type FxContextValue } from "./boxFx";
 
 export function BoardDnD({ children }: { children: React.ReactNode }) {
   const { state, dispatch } = useBoard();
@@ -63,11 +63,18 @@ export function BoardDnD({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const triggers = useMemo(
+    () => ({ triggerShake, triggerBlink }),
+    [triggerShake, triggerBlink]
+  );
+
   return (
     <DragDropProvider onDragEnd={handleDrop}>
-      <FxContext.Provider value={fx}>
-        {children}
-      </FxContext.Provider>
+      <FxTriggersContext.Provider value={triggers}>
+        <FxContext.Provider value={fx}>
+          {children}
+        </FxContext.Provider>
+      </FxTriggersContext.Provider>
     </DragDropProvider>
   );
 }
