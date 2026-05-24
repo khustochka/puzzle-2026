@@ -13,3 +13,12 @@
 .animate-shake {
   animation: shake 0.45s cubic-bezier(.36,.07,.19,.97) both;
 }
+
+@keyframes merge-blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.4; }
+}
+
+.animate-merge-blink {
+  animation: merge-blink 0.8s ease-in-out both;
+}

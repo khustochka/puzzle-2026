@@ -4,51 +4,70 @@ import type { DragEndEvent } from "@dnd-kit/abstract";
 import { useBoard } from "../hooks/useBoard";
 import { findBoxById } from "../reducers/boardSelectors";
 
-type ShakeContextValue = {
+type FxContextValue = {
   shakingSourceId: string | null;
   shakingTargetId: string | null;
   shakeNonce: number;
+  blinkingId: string | null;
+  blinkNonce: number;
 };
 
-const ShakeContext = createContext<ShakeContextValue>({
+const FxContext = createContext<FxContextValue>({
   shakingSourceId: null,
   shakingTargetId: null,
   shakeNonce: 0,
+  blinkingId: null,
+  blinkNonce: 0,
 });
 
-export function useShake(id: string) {
-  const { shakingSourceId, shakingTargetId, shakeNonce } = useContext(ShakeContext);
+export function useBoxFx(id: string) {
+  const fx = useContext(FxContext);
   return {
-    isShaking: shakingSourceId === id || shakingTargetId === id,
-    isShakingTarget: shakingTargetId === id,
-    shakeNonce,
+    isShaking: fx.shakingSourceId === id || fx.shakingTargetId === id,
+    isShakingTarget: fx.shakingTargetId === id,
+    shakeNonce: fx.shakeNonce,
+    isBlinking: fx.blinkingId === id,
+    blinkNonce: fx.blinkNonce,
   };
 }
 
 export function BoardDnD({ children }: { children: React.ReactNode }) {
   const { state, dispatch } = useBoard();
-  const [shake, setShake] = useState<ShakeContextValue>({
+  const [fx, setFx] = useState<FxContextValue>({
     shakingSourceId: null,
     shakingTargetId: null,
     shakeNonce: 0,
+    blinkingId: null,
+    blinkNonce: 0,
   });
-  const timeoutRef = useRef<number | null>(null);
+  const shakeTimeoutRef = useRef<number | null>(null);
+  const blinkTimeoutRef = useRef<number | null>(null);
 
   const triggerShake = useCallback((sourceId: string, targetId: string) => {
-    if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
-    setShake((prev) => ({
+    if (shakeTimeoutRef.current !== null) window.clearTimeout(shakeTimeoutRef.current);
+    setFx((prev) => ({
+      ...prev,
       shakingSourceId: sourceId,
       shakingTargetId: targetId,
       shakeNonce: prev.shakeNonce + 1,
     }));
-    timeoutRef.current = window.setTimeout(() => {
-      setShake((prev) => ({
-        shakingSourceId: null,
-        shakingTargetId: null,
-        shakeNonce: prev.shakeNonce,
-      }));
-      timeoutRef.current = null;
+    shakeTimeoutRef.current = window.setTimeout(() => {
+      setFx((prev) => ({ ...prev, shakingSourceId: null, shakingTargetId: null }));
+      shakeTimeoutRef.current = null;
     }, 450);
+  }, []);
+
+  const triggerBlink = useCallback((id: string) => {
+    if (blinkTimeoutRef.current !== null) window.clearTimeout(blinkTimeoutRef.current);
+    setFx((prev) => ({
+      ...prev,
+      blinkingId: id,
+      blinkNonce: prev.blinkNonce + 1,
+    }));
+    blinkTimeoutRef.current = window.setTimeout(() => {
+      setFx((prev) => ({ ...prev, blinkingId: null }));
+      blinkTimeoutRef.current = null;
+    }, 800);
   }, []);
 
   const handleDrop = (event: DragEndEvent) => {
@@ -64,6 +83,7 @@ export function BoardDnD({ children }: { children: React.ReactNode }) {
 
     if (source && target && source.category.id === target.category.id) {
       dispatch({ type: 'mergeBoxes', source, target });
+      triggerBlink(targetId);
     } else {
       triggerShake(sourceId, targetId);
     }
@@ -71,9 +91,9 @@ export function BoardDnD({ children }: { children: React.ReactNode }) {
 
   return (
     <DragDropProvider onDragEnd={handleDrop}>
-      <ShakeContext.Provider value={shake}>
+      <FxContext.Provider value={fx}>
         {children}
-      </ShakeContext.Provider>
+      </FxContext.Provider>
     </DragDropProvider>
   );
 }
