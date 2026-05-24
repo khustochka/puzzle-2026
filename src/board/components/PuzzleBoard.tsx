@@ -9,13 +9,20 @@ export function PuzzleBoard() {
     <div className="flex flex-col min-h-screen bg-slate-50">
       <header className="sticky top-0 z-10 flex items-start justify-between gap-6 px-6 py-3 bg-yellow-200/80 backdrop-blur border-b border-yellow-300 shadow-sm">
         <div className="flex flex-col">
-          <h1 className="text-xl font-semibold text-slate-800">Puzzle 2026</h1>
-          <span
-            onClick={() => confirm("Do you want to reset? You will lose your progress.") && dispatch({type: 'resetBoard'})}
-            className="mt-1 self-start cursor-pointer text-sm text-red-500 underline decoration-dashed underline-offset-4 hover:text-red-700"
-          >
-            Reset
-          </span>
+          <div>
+            <h1 className="text-xl font-semibold text-slate-800 inline-block">Puzzle 2026</h1>
+            {board &&
+              <span className="inline-block ml-2 text-lg text-gray-500">{board.size}x{board.size}</span>
+            }
+          </div>
+          {loading ||
+            <span
+              onClick={() => confirm("Do you want to reset? You will lose your progress.") && dispatch({ type: 'resetBoard' })}
+              className="mt-1 self-start cursor-pointer text-sm text-red-500 underline decoration-dashed underline-offset-4 hover:text-red-700"
+            >
+              Reset
+            </span>
+          }
         </div>
 
         <p className="text-xs text-slate-500 text-right leading-relaxed">
