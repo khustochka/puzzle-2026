@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { useLocalStorage } from "../../shared/hooks/useLocalStorage";
 import { BoardContext } from "../contexts/BoardContext";
+import { boardReducer } from "../reducers/boardReducer";
 import type { Board, BoardState } from "../types/boardTypes";
 
 export function BoardProvider({ children, initialBoard }: { children: React.ReactNode, initialBoard: Board }) {
   const [savedBoard, setSavedBoard] = useLocalStorage('puzzle-board', initialBoard)
 
-  const initialState = {
-    board: savedBoard,
-  }
-  //const [state, dispatch] = useReducer(editorReducer, initialState);
-  const [state] = useState<BoardState>(initialState)
+  const [state, dispatch] = useReducer(
+    boardReducer,
+    savedBoard,
+    (board): BoardState => ({ board }),
+  );
 
   useEffect(
     () => setSavedBoard(state.board),
@@ -18,7 +19,7 @@ export function BoardProvider({ children, initialBoard }: { children: React.Reac
   )
 
   return (
-    <BoardContext.Provider value={{ state }}>
+    <BoardContext.Provider value={{ state, dispatch }}>
       {children}
     </BoardContext.Provider>
   );

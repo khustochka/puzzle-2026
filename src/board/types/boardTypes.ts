@@ -21,3 +21,6 @@ export type BoxStatus = 'single' | 'multiple' | 'full';
 export type BoardState = {
   board: Board;
 }
+
+export type BoardAction =
+  | { type: 'mergeBoxes'; source: BoardBox; target: BoardBox };

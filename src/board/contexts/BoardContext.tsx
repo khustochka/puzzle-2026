@@ -1,8 +1,7 @@
 import { createContext } from "react";
-import type { BoardState } from "../types/boardTypes";
-// import type { EditorState, EditorAction } from "../types/editorTypes";
+import type { BoardState, BoardAction } from "../types/boardTypes";
 
 export const BoardContext = createContext<{
   state: BoardState;
-  //dispatch: React.Dispatch<EditorAction>;
+  dispatch: React.Dispatch<BoardAction>;
 } | null>(null);
