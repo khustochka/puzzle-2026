@@ -1,57 +1,57 @@
 [
   {
     "id": "c1",
-    "name": "C1",
+    "name": "Citrus Fruits",
     "entries": [
-      { "id": "c1-e1", "value": "C1-E1" },
-      { "id": "c1-e2", "value": "C1-E2" },
-      { "id": "c1-e3", "value": "C1-E3" },
-      { "id": "c1-e4", "value": "C1-E4" },
-      { "id": "c1-e5", "value": "C1-E5" }
+      { "id": "c1-e1", "value": "Lemon" },
+      { "id": "c1-e2", "value": "Orange" },
+      { "id": "c1-e3", "value": "Grapefruit" },
+      { "id": "c1-e4", "value": "Lime" },
+      { "id": "c1-e5", "value": "Mandarin" }
     ]
   },
   {
     "id": "c2",
-    "name": "C2",
+    "name": "Jazz Standards",
     "entries": [
-      { "id": "c2-e1", "value": "C2-E1" },
-      { "id": "c2-e2", "value": "C2-E2" },
-      { "id": "c2-e3", "value": "C2-E3" },
-      { "id": "c2-e4", "value": "C2-E4" },
-      { "id": "c2-e5", "value": "C2-E5" }
+      { "id": "c2-e1", "value": "Take Five" },
+      { "id": "c2-e2", "value": "So What" },
+      { "id": "c2-e3", "value": "Autumn Leaves" },
+      { "id": "c2-e4", "value": "Blue in Green" },
+      { "id": "c2-e5", "value": "'Round Midnight" }
     ]
   },
   {
     "id": "c3",
-    "name": "C3",
+    "name": "Chess Openings",
     "entries": [
-      { "id": "c3-e1", "value": "C3-E1" },
-      { "id": "c3-e2", "value": "C3-E2" },
-      { "id": "c3-e3", "value": "C3-E3" },
-      { "id": "c3-e4", "value": "C3-E4" },
-      { "id": "c3-e5", "value": "C3-E5" }
+      { "id": "c3-e1", "value": "Sicilian Defense" },
+      { "id": "c3-e2", "value": "King's Gambit" },
+      { "id": "c3-e3", "value": "Queen's Gambit" },
+      { "id": "c3-e4", "value": "Ruy López" },
+      { "id": "c3-e5", "value": "English Opening" }
     ]
   },
   {
     "id": "c4",
-    "name": "C4",
+    "name": "Programming Languages",
     "entries": [
-      { "id": "c4-e1", "value": "C4-E1" },
-      { "id": "c4-e2", "value": "C4-E2" },
-      { "id": "c4-e3", "value": "C4-E3" },
-      { "id": "c4-e4", "value": "C4-E4" },
-      { "id": "c4-e5", "value": "C4-E5" }
+      { "id": "c4-e1", "value": "Python" },
+      { "id": "c4-e2", "value": "Rust" },
+      { "id": "c4-e3", "value": "TypeScript" },
+      { "id": "c4-e4", "value": "Go" },
+      { "id": "c4-e5", "value": "Haskell" }
     ]
   },
   {
     "id": "c5",
-    "name": "C5",
+    "name": "Constellations",
     "entries": [
-      { "id": "c5-e1", "value": "C5-E1" },
-      { "id": "c5-e2", "value": "C5-E2" },
-      { "id": "c5-e3", "value": "C5-E3" },
-      { "id": "c5-e4", "value": "C5-E4" },
-      { "id": "c5-e5", "value": "C5-E5" }
+      { "id": "c5-e1", "value": "Orion" },
+      { "id": "c5-e2", "value": "Cassiopeia" },
+      { "id": "c5-e3", "value": "Ursa Major" },
+      { "id": "c5-e4", "value": "Lyra" },
+      { "id": "c5-e5", "value": "Andromeda" }
     ]
   }
 ]
