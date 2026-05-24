@@ -32,11 +32,12 @@ migrateLegacyStorage();
 export function EditorProvider({ children, initialCategories }: { children: React.ReactNode, initialCategories: EditorCategory[] }) {
   const [savedCategories, setSavedCategories] = useLocalStorage('editor-categories-v2', initialCategories)
 
-  const [state, dispatch] = useReducer(
-    editorReducer,
-    savedCategories,
-    (categories) => ({ categories, newlyAddedCategoryId: null }),
-  );
+  const initialState = {
+    categories: savedCategories,
+    newlyAddedCategoryId: null,
+  }
+  const [state, dispatch] = useReducer(editorReducer, initialState);
+
 
   const entryLookup = useMemo(
     () => buildEntryLookup(state.categories),

@@ -1,3 +1,5 @@
+export const MAX_SIZE = 5;
+
 export type BoardCategory = {
   id: string;
   name: string;

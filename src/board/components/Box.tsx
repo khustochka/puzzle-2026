@@ -1,4 +1,4 @@
-import type { BoardBox, BoxStatus } from "../types/boardTypes";
+import { MAX_SIZE, type BoardBox, type BoxStatus } from "../types/boardTypes";
 import { useDraggable, useDroppable } from '@dnd-kit/react';
 
 export function Box({ box }: { box: BoardBox }) {
@@ -7,7 +7,7 @@ export function Box({ box }: { box: BoardBox }) {
     disabled: isDragSource });
 
   let status: BoxStatus = 'single';
-  if (box.entries.length >= 45 ) status = 'full';
+  if (box.entries.length >= MAX_SIZE ) status = 'full';
   else if (box.entries.length > 1 ) status = 'multiple';
 
   return (
