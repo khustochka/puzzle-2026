@@ -14,14 +14,27 @@ export function PuzzleBoard() {
             {board &&
               <span className="inline-block ml-2 text-lg text-gray-500">{board.size}x{board.size}</span>
             }
+            <span className="inline-flex items-center align-middle ml-2 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide text-amber-800 ring-1 ring-amber-200">
+              Demo
+            </span>
           </div>
           {loading ||
-            <span
-              onClick={() => confirm("Do you want to reset? You will lose your progress.") && dispatch({ type: 'resetBoard' })}
-              className="mt-1 self-start cursor-pointer text-sm text-red-500 underline decoration-dashed underline-offset-4 hover:text-red-700"
-            >
-              Reset
-            </span>
+            <div className="mt-1 flex items-center gap-4">
+              <span
+                onClick={() => confirm("Do you want to reset? You will lose your progress.") && dispatch({ type: 'resetBoard' })}
+                className="cursor-pointer text-sm text-red-500 underline decoration-dashed underline-offset-4 hover:text-red-700"
+              >
+                Reset
+              </span>
+              <a
+                href={import.meta.env.BASE_URL + "edit.html"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-emerald-600 underline decoration-dashed underline-offset-4 hover:text-emerald-800"
+              >
+                Make your own!
+              </a>
+            </div>
           }
         </div>
 
