@@ -33,6 +33,12 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
         ...state,
         board: mergeBoxes(state.board, action.source, action.target)
       }
+    case 'resetBoard':
+      return {
+        board: null,
+        loading: true,
+        loadingError: null,
+      }
     default: {
       const _exhaustive: never = action;
       void _exhaustive;

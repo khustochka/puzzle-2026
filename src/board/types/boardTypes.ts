@@ -29,4 +29,5 @@ export type BoardState = {
 
 export type BoardAction =
   | { type: 'mergeBoxes'; source: BoardBox; target: BoardBox }
-  | { type: 'fileLoadResult'; result: { ok: true; data: unknown } | { ok: false; error: string } };
+  | { type: 'fileLoadResult'; result: { ok: true; data: unknown } | { ok: false; error: string } }
+  | { type: 'resetBoard' };
