@@ -12,9 +12,10 @@ export function BoardDnD({ children }: { children: React.ReactNode }) {
     const sourceId = event.operation.source.id as string;
     const targetId = event.operation.target.id as string;
 
+    if (sourceId === targetId) return;
+
     const source = findBoxById(state, sourceId);
     const target = findBoxById(state, targetId);
-
 
     if (source && target && source.category.id === target.category.id) {
       dispatch({ type: 'mergeBoxes', source, target });

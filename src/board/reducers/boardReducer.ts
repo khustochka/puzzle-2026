@@ -48,6 +48,7 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
 }
 
 function mergeBoxes(board: Board, source: BoardBox, target: BoardBox) {
+  if (source.id === target.id) return board;
   if (source.category.id !== target.category.id) return board;
   return {
     size: board.size,
