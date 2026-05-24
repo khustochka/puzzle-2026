@@ -12,7 +12,7 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
               (box) => box.id === action.target.id ? { ...box, entries: [...box.entries, ...action.source.entries] } : box
             ).filter(cell => cell.id !== action.source.id)
           }
-        )).filter(row => row.cells.length === 0)
+        )).filter(row => row.cells.length !== 0)
       }
     default: {
       const _exhaustive: never = action.type;
