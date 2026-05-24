@@ -1,7 +1,7 @@
 import type { Board, BoardBox, BoardRow } from "../types/boardTypes";
 import type { EditorCategory, EditorEntry } from "../../shared/types";
 
-const FailedToLoad = new Error('Failed to load.');
+const FailedToLoad = new Error('Failed to load board');
 
 export function constructBoard(data: unknown): Board {
   assertArray(data);

@@ -17,7 +17,7 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
           return {
             board: null,
             loading: false,
-            loadingError: "Failed to load."
+            loadingError: "Failed to load board"
           }
         }
       }
@@ -25,7 +25,7 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
         return {
           board: null,
           loading: false,
-          loadingError: action.result.error
+          loadingError: "Failed to load board"
         }
     case 'mergeBoxes':
       if (!state.board) return state;
