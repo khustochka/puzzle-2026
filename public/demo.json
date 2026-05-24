@@ -1,0 +1,57 @@
+[
+  {
+    "id": "c1",
+    "name": "C1",
+    "entries": [
+      { "id": "c1-e1", "value": "C1-E1" },
+      { "id": "c1-e2", "value": "C1-E2" },
+      { "id": "c1-e3", "value": "C1-E3" },
+      { "id": "c1-e4", "value": "C1-E4" },
+      { "id": "c1-e5", "value": "C1-E5" }
+    ]
+  },
+  {
+    "id": "c2",
+    "name": "C2",
+    "entries": [
+      { "id": "c2-e1", "value": "C2-E1" },
+      { "id": "c2-e2", "value": "C2-E2" },
+      { "id": "c2-e3", "value": "C2-E3" },
+      { "id": "c2-e4", "value": "C2-E4" },
+      { "id": "c2-e5", "value": "C2-E5" }
+    ]
+  },
+  {
+    "id": "c3",
+    "name": "C3",
+    "entries": [
+      { "id": "c3-e1", "value": "C3-E1" },
+      { "id": "c3-e2", "value": "C3-E2" },
+      { "id": "c3-e3", "value": "C3-E3" },
+      { "id": "c3-e4", "value": "C3-E4" },
+      { "id": "c3-e5", "value": "C3-E5" }
+    ]
+  },
+  {
+    "id": "c4",
+    "name": "C4",
+    "entries": [
+      { "id": "c4-e1", "value": "C4-E1" },
+      { "id": "c4-e2", "value": "C4-E2" },
+      { "id": "c4-e3", "value": "C4-E3" },
+      { "id": "c4-e4", "value": "C4-E4" },
+      { "id": "c4-e5", "value": "C4-E5" }
+    ]
+  },
+  {
+    "id": "c5",
+    "name": "C5",
+    "entries": [
+      { "id": "c5-e1", "value": "C5-E1" },
+      { "id": "c5-e2", "value": "C5-E2" },
+      { "id": "c5-e3", "value": "C5-E3" },
+      { "id": "c5-e4", "value": "C5-E4" },
+      { "id": "c5-e5", "value": "C5-E5" }
+    ]
+  }
+]
