@@ -1,6 +1,6 @@
 import { type BoardBox, type BoxStatus } from "../types/boardTypes";
 import { useDraggable, useDroppable } from '@dnd-kit/react';
-import { useBoxFx } from "./BoardDnD";
+import { useBoxFx } from "./boxFx";
 
 export function Box({ box, capacity }: { box: BoardBox, capacity: number }) {
   const { ref: dragRef, isDragSource } = useDraggable({ id: box.id });
