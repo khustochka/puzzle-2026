@@ -1,23 +1,47 @@
-import { MAX_SIZE, type Board, type BoardRow } from "../types/boardTypes";
+import { MAX_SIZE, type Board, type BoardBox } from "../types/boardTypes";
 
 export function createInitialBoard(): Board {
-  const board: Board = [];
+  const flatBoard = [];
 
   for (let i = 1; i <= MAX_SIZE; i++) {
     const category = {
-      id: crypto.randomUUID(),
+      id: `C${i}`,
       name: `C${i}`,
     };
-    const row: BoardRow = { id: `C${i}`, cells: [] };
     for (let j = 1; j <= MAX_SIZE; j++) {
-      row.cells.push({
+      flatBoard.push({
         id: `C${i}-E${j}`,
         category: category,
         entries: [`C${i}-E${j}`],
       });
     }
-    board.push(row);
   }
 
-  return board;
+  return applyRows(shuffleToGrid(flatBoard, MAX_SIZE));
+}
+
+function shuffleToGrid<T>(arr: T[], n: number): T[][] {
+  if (arr.length !== n * n) {
+    throw new Error(`Expected ${n * n} elements, got ${arr.length}`);
+  }
+
+  // Copy so we don't mutate the input
+  const a = arr.slice();
+
+  // Fisher-Yates shuffle
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+
+  // Chunk into N rows of N
+  const grid: T[][] = [];
+  for (let i = 0; i < n; i++) {
+    grid.push(a.slice(i * n, (i + 1) * n));
+  }
+  return grid;
+}
+
+function applyRows(arr: BoardBox[][]): Board {
+  return arr.map((row, idx) => ({id: `R${idx}`, cells: row}))
 }
