@@ -1,8 +1,3 @@
-export type BoardEntry = {
-  id: string;
-  value: string;
-}
-
 export type BoardCategory = {
   id: string;
   name: string;
@@ -11,7 +6,7 @@ export type BoardCategory = {
 export type BoardBox = {
   id: string;
   category: BoardCategory;
-  entries: BoardEntry[];
+  entries: string[];
 }
 
 export type BoardRow = {
@@ -20,6 +15,8 @@ export type BoardRow = {
 }
 
 export type Board = BoardRow[]
+
+export type BoxStatus = 'single' | 'multiple' | 'full';
 
 export type BoardState = {
   board: Board;

@@ -15,12 +15,7 @@ for (let i = 1; i <= 45; i++) {
       {
         id: `C${i}-E${j}`,
         category: category,
-        entries: [
-          {
-            id: crypto.randomUUID(),
-            value: `C${i}-E${j}`
-          }
-        ]
+        entries: [`C${i}-E${j}`]
       }
     )
   }
