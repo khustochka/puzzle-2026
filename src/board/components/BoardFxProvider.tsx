@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FxContext, FxTriggersContext, type BlinkColor, type FxContextValue } from "./boxFx";
 
 export function BoardFxProvider({ children }: { children: React.ReactNode }) {
@@ -39,6 +39,11 @@ export function BoardFxProvider({ children }: { children: React.ReactNode }) {
       setFx((prev) => ({ ...prev, blinkingId: null }));
       blinkTimeoutRef.current = null;
     }, 800);
+  }, []);
+
+  useEffect(() => () => {
+    if (shakeTimeoutRef.current !== null) window.clearTimeout(shakeTimeoutRef.current);
+    if (blinkTimeoutRef.current !== null) window.clearTimeout(blinkTimeoutRef.current);
   }, []);
 
   const triggers = useMemo(
