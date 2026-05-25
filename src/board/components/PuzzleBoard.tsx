@@ -110,6 +110,13 @@ export function PuzzleBoard() {
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
           <ExclamationTriangleIcon className="size-10 text-red-500" />
           <div className="text-lg font-medium text-slate-800">{loadingError}</div>
+          <button
+            type="button"
+            onClick={() => dispatch({ type: 'resetBoard' })}
+            className="mt-2 rounded border border-slate-300 bg-white px-4 py-1.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+          >
+            Try again
+          </button>
         </div>
       ) : loading ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-slate-600">
