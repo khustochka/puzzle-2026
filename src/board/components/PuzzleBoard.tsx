@@ -125,38 +125,28 @@ export function PuzzleBoard() {
                 : -1;
               return (
                 <div key={row.id} className="flex flex-row flex-nowrap items-stretch">
-                  {row.cells.map((box, i) => {
-                    const isNoop = sourceIndex !== -1 && (i === sourceIndex || i === sourceIndex + 1);
+                  {Array.from({ length: row.cells.length + 1 }, (_, i) => {
+                    const isAdjacentToSource = sourceIndex !== -1 && (i === sourceIndex || i === sourceIndex + 1);
+                    const box = row.cells[i];
                     return (
-                      <div key={`${row.id}-gap-${i}`} className="flex">
+                      <div key={`${row.id}-slot-${i}`} className="flex">
                         <Gap
                           rowId={row.id}
                           insertIndex={i}
-                          active={!!selectedBox && !isNoop}
+                          active={!!selectedBox && !isAdjacentToSource}
                           onClick={handleGapClick}
                         />
-                        <Box
-                          box={box}
-                          capacity={board.size}
-                          isSelected={selectedBox?.id === box.id}
-                          onClick={handleBoxClick}
-                        />
+                        {box && (
+                          <Box
+                            box={box}
+                            capacity={board.size}
+                            isSelected={selectedBox?.id === box.id}
+                            onClick={handleBoxClick}
+                          />
+                        )}
                       </div>
                     );
                   })}
-                  {(() => {
-                    const i = row.cells.length;
-                    const isNoop = sourceIndex !== -1 && (i === sourceIndex || i === sourceIndex + 1);
-                    return (
-                      <Gap
-                        key={`${row.id}-gap-${i}`}
-                        rowId={row.id}
-                        insertIndex={i}
-                        active={!!selectedBox && !isNoop}
-                        onClick={handleGapClick}
-                      />
-                    );
-                  })()}
                 </div>
               );
             })
