@@ -56,12 +56,17 @@ export function PuzzleBoard() {
           }
           {loading ||
             <div className="mt-1 flex items-center gap-4">
-              <span
-                onClick={() => confirm("Do you want to reset? You will lose your progress.") && dispatch({ type: 'resetBoard' })}
-                className="cursor-pointer text-sm text-red-500 underline decoration-dashed underline-offset-4 hover:text-red-700"
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm("Do you want to reset? You will lose your progress.")) {
+                    dispatch({ type: 'resetBoard' });
+                  }
+                }}
+                className="cursor-pointer text-sm text-red-500 underline decoration-dashed underline-offset-4 hover:text-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded"
               >
                 Reset
-              </span>
+              </button>
               <a
                 href={import.meta.env.BASE_URL + "edit.html"}
                 target="_blank"
