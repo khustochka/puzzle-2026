@@ -1,10 +1,8 @@
 import type { Board, BoardBox, BoardRow } from "../types/boardTypes";
 import type { EditorCategory, EditorEntry } from "../../shared/types";
 
-const FailedToLoad = new Error('Failed to load board');
-
 export function constructBoard(data: unknown): Board {
-  assertArray(data);
+  assertArray(data, 'board');
   const size = data.length;
 
   const entries = constructEntries(data, size);
@@ -21,7 +19,9 @@ function constructEntries(data: unknown[], size: number): BoardBox[] {
   return data.reduce<BoardBox[]>(
     (memo, category) => {
       assertCategory(category);
-      if (category.entries.length !== size) throw FailedToLoad;
+      if (category.entries.length !== size) {
+        throw new Error(`Category "${category.id}" has ${category.entries.length} entries, expected ${size}`);
+      }
       const boardCategory = {id: category.id, name: category.name}
       const boxes = category.entries.map((entry) => {
         assertEntry(entry);
@@ -37,22 +37,22 @@ function constructEntries(data: unknown[], size: number): BoardBox[] {
   )
 }
 
-function assertArray(x: unknown): asserts x is unknown[] {
-  if (!Array.isArray(x)) throw FailedToLoad;
+function assertArray(x: unknown, path: string): asserts x is unknown[] {
+  if (!Array.isArray(x)) throw new Error(`Expected array at ${path}`);
 }
 
 function assertEntry(x: unknown): asserts x is EditorEntry {
-  if (typeof x !== 'object' || x === null) throw FailedToLoad;
-  if (!('id' in x) || typeof x.id !== 'string') throw FailedToLoad;
-  if (!('value' in x) || typeof x.value !== 'string') throw FailedToLoad;
+  if (typeof x !== 'object' || x === null) throw new Error('Entry is not an object');
+  if (!('id' in x) || typeof x.id !== 'string') throw new Error('Entry missing string "id"');
+  if (!('value' in x) || typeof x.value !== 'string') throw new Error('Entry missing string "value"');
 }
 
 function assertCategory(x: unknown): asserts x is EditorCategory {
-  if (typeof x !== 'object' || x === null) throw FailedToLoad;
-  if (!('id' in x) || typeof x.id !== 'string') throw FailedToLoad;
-  if (!('name' in x) || typeof x.name !== 'string') throw FailedToLoad;
-  if (!('entries' in x)) throw FailedToLoad;
-  assertArray(x.entries);
+  if (typeof x !== 'object' || x === null) throw new Error('Category is not an object');
+  if (!('id' in x) || typeof x.id !== 'string') throw new Error('Category missing string "id"');
+  if (!('name' in x) || typeof x.name !== 'string') throw new Error('Category missing string "name"');
+  if (!('entries' in x)) throw new Error('Category missing "entries"');
+  assertArray(x.entries, 'category.entries');
   for (const entry of x.entries) assertEntry(entry);
 }
 
