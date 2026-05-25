@@ -17,6 +17,8 @@ export type BoardRow = {
 export type Board = {
   size: number;
   rows: BoardRow[];
+  score: number;
+  mistakes: number;
 }
 
 export type BoxStatus = 'single' | 'multiple' | 'full';

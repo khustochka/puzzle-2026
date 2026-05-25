@@ -12,6 +12,8 @@ export function constructBoard(data: unknown): Board {
   return {
     size: size,
     rows: applyRows(shuffleToGrid(entries, size)),
+    score: 0,
+    mistakes: 0,
   };
 }
 

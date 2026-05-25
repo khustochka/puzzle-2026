@@ -44,6 +44,16 @@ export function PuzzleBoard() {
               Demo
             </span>
           </div>
+          {board &&
+            <div className="mt-1 flex items-center gap-4 text-sm text-slate-600">
+              <span>
+                Score: <span className="text-base font-semibold text-emerald-700 tabular-nums">{board.score}</span>
+              </span>
+              <span>
+                Mistakes: <span className="text-base font-semibold text-red-600 tabular-nums">{board.mistakes}</span>
+              </span>
+            </div>
+          }
           {loading ||
             <div className="mt-1 flex items-center gap-4">
               <span

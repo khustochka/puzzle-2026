@@ -46,14 +46,11 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
         return { ...state, selectedBox: box };
       }
       if (selected.id === box.id) return { ...state, selectedBox: null };
-      if (selected.category.id === box.category.id) {
-        return {
-          ...state,
-          board: mergeBoxes(state.board, selected, box),
-          selectedBox: null,
-        };
-      }
-      return { ...state, selectedBox: null };
+      return {
+        ...state,
+        board: mergeBoxes(state.board, selected, box),
+        selectedBox: null,
+      };
     }
     case 'gapClicked': {
       if (!state.board) return state;
@@ -90,7 +87,7 @@ function moveBox(board: Board, source: BoardBox, targetRowId: string, insertInde
   }
 
   return {
-    size: board.size,
+    ...board,
     rows: board.rows.map((row) => {
       if (row.id === sourceRow.id && row.id === targetRowId) {
         const without = row.cells.filter((cell) => cell.id !== source.id);
@@ -110,9 +107,10 @@ function moveBox(board: Board, source: BoardBox, targetRowId: string, insertInde
 
 function mergeBoxes(board: Board, source: BoardBox, target: BoardBox) {
   if (source.id === target.id) return board;
-  if (source.category.id !== target.category.id) return board;
+  if (source.category.id !== target.category.id) return { ...board, mistakes: board.mistakes + 1 };
   return {
-    size: board.size,
+    ...board,
+    score: board.score + 1,
     rows: board.rows.map((row) => (
       {
         ...row,
