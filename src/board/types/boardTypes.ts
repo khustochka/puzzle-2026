@@ -31,6 +31,5 @@ export type BoardState = {
 export type BoardAction =
   | { type: 'selectBox', box: BoardBox | null}
   | { type: 'boxClicked'; box: BoardBox; capacity: number }
-  | { type: 'mergeBoxes'; source: BoardBox; target: BoardBox }
   | { type: 'fileLoadResult'; result: { ok: true; data: unknown } | { ok: false; error: string } }
   | { type: 'resetBoard' };

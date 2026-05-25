@@ -30,12 +30,6 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
           loadingError: "Failed to load board",
           selectedBox: null,
         }
-    case 'mergeBoxes':
-      if (!state.board) return state;
-      return {
-        ...state,
-        board: mergeBoxes(state.board, action.source, action.target)
-      }
     case 'selectBox':
       if (!state.board) return state;
       return {

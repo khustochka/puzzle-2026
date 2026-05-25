@@ -1,13 +1,13 @@
-import { BoardDnD } from "./components/BoardDnD";
+import { BoardFxProvider } from "./components/BoardFxProvider";
 import { BoardProvider } from "./components/BoardProvider";
 import { PuzzleBoard } from "./components/PuzzleBoard";
 
 export default function App() {
   return (
     <BoardProvider>
-      <BoardDnD>
+      <BoardFxProvider>
         <PuzzleBoard />
-      </BoardDnD>
+      </BoardFxProvider>
     </BoardProvider>
   )
 }
