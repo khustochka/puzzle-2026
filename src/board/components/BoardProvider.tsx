@@ -17,7 +17,7 @@ export function BoardProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(
-    () => { if (state.board) setSavedBoard(state.board) },
+    () => { setSavedBoard(state.board) },
     [state.board, setSavedBoard]
   )
 

@@ -9,7 +9,11 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T)
   })
 
   useEffect(() => {
-    if (value) localStorage.setItem(key, JSON.stringify(value));
+    if (value === null || value === undefined) {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   }, [key, value])
 
   return [value, setValue]
