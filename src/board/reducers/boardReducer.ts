@@ -30,12 +30,6 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
           loadingError: "Failed to load board",
           selectedBox: null,
         }
-    case 'selectBox':
-      if (!state.board) return state;
-      return {
-        ...state,
-        selectedBox: action.box
-      }
     case 'boxClicked': {
       if (!state.board) return state;
       const { box, capacity } = action;
