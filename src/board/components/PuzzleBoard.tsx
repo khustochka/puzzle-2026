@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { ArrowPathIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useBoard } from "../hooks/useBoard"
 import { Box } from "./Box";
+import { Gap } from "./Gap";
 import { useFxTriggers } from "./boxFx";
 import type { BoardBox } from "../types/boardTypes";
 
@@ -23,6 +24,12 @@ export function PuzzleBoard() {
     }
     dispatch({ type: 'boxClicked', box, capacity });
   }, [dispatch, triggerShake, triggerBlink]);
+
+  const handleGapClick = useCallback((rowId: string, insertIndex: number) => {
+    const selected = selectedBoxRef.current;
+    if (selected) triggerBlink(selected.id, 'blue');
+    dispatch({ type: 'gapClicked', rowId, insertIndex });
+  }, [dispatch, triggerBlink]);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -97,21 +104,47 @@ export function PuzzleBoard() {
       ) : (
         <div className="inline-flex flex-col gap-2 p-4">
           {board &&
-            board.rows.map((row) => (
-              <div key={row.id} className="flex flex-row gap-2 flex-nowrap">
-                {
-                  row.cells.map((box) => (
-                    <Box
-                      key={box.id}
-                      box={box}
-                      capacity={board.size}
-                      isSelected={selectedBox?.id === box.id}
-                      onClick={handleBoxClick}
-                    />
-                  ))
-                }
-              </div>
-            ))
+            board.rows.map((row) => {
+              const sourceIndex = selectedBox
+                ? row.cells.findIndex((cell) => cell.id === selectedBox.id)
+                : -1;
+              return (
+                <div key={row.id} className="flex flex-row flex-nowrap items-stretch">
+                  {row.cells.map((box, i) => {
+                    const isNoop = sourceIndex !== -1 && (i === sourceIndex || i === sourceIndex + 1);
+                    return (
+                      <div key={`${row.id}-gap-${i}`} className="flex">
+                        <Gap
+                          rowId={row.id}
+                          insertIndex={i}
+                          active={!!selectedBox && !isNoop}
+                          onClick={handleGapClick}
+                        />
+                        <Box
+                          box={box}
+                          capacity={board.size}
+                          isSelected={selectedBox?.id === box.id}
+                          onClick={handleBoxClick}
+                        />
+                      </div>
+                    );
+                  })}
+                  {(() => {
+                    const i = row.cells.length;
+                    const isNoop = sourceIndex !== -1 && (i === sourceIndex || i === sourceIndex + 1);
+                    return (
+                      <Gap
+                        key={`${row.id}-gap-${i}`}
+                        rowId={row.id}
+                        insertIndex={i}
+                        active={!!selectedBox && !isNoop}
+                        onClick={handleGapClick}
+                      />
+                    );
+                  })()}
+                </div>
+              );
+            })
           }
         </div>
       )}

@@ -55,6 +55,16 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
       }
       return { ...state, selectedBox: null };
     }
+    case 'gapClicked': {
+      if (!state.board) return state;
+      const selected = state.selectedBox;
+      if (!selected) return state;
+      return {
+        ...state,
+        board: moveBox(state.board, selected, action.rowId, action.insertIndex),
+        selectedBox: null,
+      };
+    }
     case 'resetBoard':
       return {
         board: null,
@@ -68,6 +78,34 @@ export function boardReducer(state: BoardState, action: BoardAction): BoardState
       return state;
     }
   }
+}
+
+function moveBox(board: Board, source: BoardBox, targetRowId: string, insertIndex: number): Board {
+  const sourceRow = board.rows.find((row) => row.cells.some((cell) => cell.id === source.id));
+  if (!sourceRow) return board;
+  const sourceIndex = sourceRow.cells.findIndex((cell) => cell.id === source.id);
+
+  if (sourceRow.id === targetRowId && (insertIndex === sourceIndex || insertIndex === sourceIndex + 1)) {
+    return board;
+  }
+
+  return {
+    size: board.size,
+    rows: board.rows.map((row) => {
+      if (row.id === sourceRow.id && row.id === targetRowId) {
+        const without = row.cells.filter((cell) => cell.id !== source.id);
+        const adjusted = insertIndex > sourceIndex ? insertIndex - 1 : insertIndex;
+        return { ...row, cells: [...without.slice(0, adjusted), source, ...without.slice(adjusted)] };
+      }
+      if (row.id === sourceRow.id) {
+        return { ...row, cells: row.cells.filter((cell) => cell.id !== source.id) };
+      }
+      if (row.id === targetRowId) {
+        return { ...row, cells: [...row.cells.slice(0, insertIndex), source, ...row.cells.slice(insertIndex)] };
+      }
+      return row;
+    }).filter((row) => row.cells.length !== 0),
+  };
 }
 
 function mergeBoxes(board: Board, source: BoardBox, target: BoardBox) {
