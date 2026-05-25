@@ -12,7 +12,7 @@ export function BoardProvider({ children }: { children: React.ReactNode }) {
     savedBoard,
     (board): BoardState => (board ?
       { board, loading: false, loadingError: null, selectedBox: null } :
-      { board, loading: true, loadingError: null, selectedBox: null }
+      { board: null, loading: true, loadingError: null, selectedBox: null }
     ),
   );
 
